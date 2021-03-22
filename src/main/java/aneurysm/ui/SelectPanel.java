@@ -274,10 +274,11 @@ public class SelectPanel extends JPanel implements ActionListener, ItemListener,
 
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
-		if (host.getControls().getSelectedWS() != null) {
+		if (host.getControls().getSelectedWS() != null || host.getControls().getSelectedMOS() != null) {
 			if (arg0.getSource() == itemBox) {
 				String selected = itemBox.getSelectedItem().toString();
 				if (RenderControls.isThingsMode()) {
+					System.out.println("selected: " + selected);
 					host.getControls().getSelectedMOS().setThingID(Integer.parseInt("0" + selected, 16));
 				}
 				if (RenderControls.isLinesMode()) {
