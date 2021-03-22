@@ -37,5 +37,8 @@ At present, Aneurysm's controls are statically bound [input configuration will a
  - Ability to configure keyboard and mouse inputs
  - Ability to not just change attributes of levels, but to also insert or delete new elements.
   
+For those of you who have access to a recent version of Eclipse, simply clone this repo somewhere and open as a project in Eclipse. After it is loaded, you can either run the source or perform the operation "mvn clean package" and then execute the .jar output.
+
+For those who trust unsigned JAR files from weird repositories, a prebuilt version is available in the prebuild folder of this repo. You will need JRE 1.8_262. Simply download the .jar file and run it on your favorite desktop that supports this version of the JVM.
  
 Special thanks to Dark Pulse for worming down this rabbit hole with me :)
