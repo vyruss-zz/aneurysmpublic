@@ -42,3 +42,8 @@ For those of you who have access to a recent version of Eclipse, simply clone th
 For those who trust unsigned JAR files from weird repositories, a prebuilt version is available in the prebuild folder of this repo. You will need JRE 1.8_262. Simply download the .jar file and run it on your favorite desktop that supports this version of the JVM.
  
 Special thanks to Dark Pulse for worming down this rabbit hole with me :)
+![image](https://user-images.githubusercontent.com/8315203/112075572-c3918e80-8b46-11eb-82b5-00913e37f490.png)
+![image](https://user-images.githubusercontent.com/8315203/112075598-ce4c2380-8b46-11eb-9f28-e103f2b43d57.png)
+![image](https://user-images.githubusercontent.com/8315203/112075615-d4da9b00-8b46-11eb-8908-6b66a0cfdd01.png)
+![image](https://user-images.githubusercontent.com/8315203/112075625-d99f4f00-8b46-11eb-910b-583c3919af03.png)
+![image](https://user-images.githubusercontent.com/8315203/112075633-ddcb6c80-8b46-11eb-9d75-69d8afcfe50f.png)
