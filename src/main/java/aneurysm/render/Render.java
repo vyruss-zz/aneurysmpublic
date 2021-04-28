@@ -6,24 +6,18 @@ import java.awt.Image;
 import java.awt.image.ImageObserver;
 
 import aneurysm.ui.DataLists;
-import aneurysm.ui.Window;
 
 public class Render {
 
-	private Window host;
-	
-	public Render(Window w) {
-		host = w;
-	}
-	
 	public void drawHighlighted(Graphics g, ImageObserver io) {
 		g.setColor(Color.yellow);
-		if(RenderControls.isItemSelected()) g.setColor(Color.CYAN);
+		if (RenderControls.isItemSelected())
+			g.setColor(Color.CYAN);
 		int hx = RenderControls.getHighlightedX();
 		int hy = RenderControls.getHighlightedY();
 		int hw = RenderControls.getHighlightedWidth();
 		int hh = RenderControls.getHighlightedHeight();
-		if(RenderControls.isRot90()) {
+		if (RenderControls.isRot90()) {
 			int t = hy;
 			hy = -hx;
 			hx = t;
@@ -32,32 +26,29 @@ public class Render {
 			hw = t;
 		}
 		if (RenderControls.isVertsMode()) {
-			g.drawRect(
-					((hx - (48)) - RenderControls.getCameraXOffset())
-							/ RenderControls.getZoomLevel(),
-					((hy - (48)) - RenderControls.getCameraYOffset())
-							/ RenderControls.getZoomLevel(),
+			g.drawRect(((hx - (48)) - RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel(),
+					((hy - (48)) - RenderControls.getCameraYOffset()) / RenderControls.getZoomLevel(),
 					96 / (RenderControls.getZoomLevel()), 96 / (RenderControls.getZoomLevel()));
 		}
 		if (RenderControls.isLinesMode()) {
 			g.drawLine(
-					(hx - RenderControls.getCameraXOffset()
-							- (RenderControls.getZoomLevel())) / RenderControls.getZoomLevel(),
-					(hy - RenderControls.getCameraYOffset()
-							- (RenderControls.getZoomLevel())) / RenderControls.getZoomLevel(),
-					(hw - RenderControls.getCameraXOffset()
-							- (RenderControls.getZoomLevel())) / RenderControls.getZoomLevel(),
-					(hh - RenderControls.getCameraYOffset()
-							- (RenderControls.getZoomLevel())) / RenderControls.getZoomLevel());
+					(hx - RenderControls.getCameraXOffset() - (RenderControls.getZoomLevel()))
+							/ RenderControls.getZoomLevel(),
+					(hy - RenderControls.getCameraYOffset() - (RenderControls.getZoomLevel()))
+							/ RenderControls.getZoomLevel(),
+					(hw - RenderControls.getCameraXOffset() - (RenderControls.getZoomLevel()))
+							/ RenderControls.getZoomLevel(),
+					(hh - RenderControls.getCameraYOffset() - (RenderControls.getZoomLevel()))
+							/ RenderControls.getZoomLevel());
 			g.drawLine(
-					(hx - RenderControls.getCameraXOffset()
-							+ (RenderControls.getZoomLevel())) / RenderControls.getZoomLevel(),
-					(hy - RenderControls.getCameraYOffset()
-							+ (RenderControls.getZoomLevel())) / RenderControls.getZoomLevel(),
-					(hw - RenderControls.getCameraXOffset()
-							+ (RenderControls.getZoomLevel())) / RenderControls.getZoomLevel(),
-					(hh - RenderControls.getCameraYOffset()
-							+ (RenderControls.getZoomLevel())) / RenderControls.getZoomLevel());
+					(hx - RenderControls.getCameraXOffset() + (RenderControls.getZoomLevel()))
+							/ RenderControls.getZoomLevel(),
+					(hy - RenderControls.getCameraYOffset() + (RenderControls.getZoomLevel()))
+							/ RenderControls.getZoomLevel(),
+					(hw - RenderControls.getCameraXOffset() + (RenderControls.getZoomLevel()))
+							/ RenderControls.getZoomLevel(),
+					(hh - RenderControls.getCameraYOffset() + (RenderControls.getZoomLevel()))
+							/ RenderControls.getZoomLevel());
 		}
 		if (RenderControls.isThingsMode()) {
 			int w = DataLists.getObjectImage(Integer.parseInt(RenderControls.getHighlightedInfo())).getWidth(io);
@@ -65,10 +56,10 @@ public class Render {
 			int scaleW = w * 2 / ((RenderControls.getZoomLevel() / 2) + 1);
 			int scaleH = h * 2 / ((RenderControls.getZoomLevel() / 2) + 1);
 			g.drawRect(
-					((((hx - (scaleW / 2) * RenderControls.getZoomLevel()))
-							- RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel()),
-					((((hy - (scaleH / 2) * RenderControls.getZoomLevel())
-							- RenderControls.getCameraYOffset())) / RenderControls.getZoomLevel()),
+					((((hx - (scaleW / 2) * RenderControls.getZoomLevel())) - RenderControls.getCameraXOffset())
+							/ RenderControls.getZoomLevel()),
+					((((hy - (scaleH / 2) * RenderControls.getZoomLevel()) - RenderControls.getCameraYOffset()))
+							/ RenderControls.getZoomLevel()),
 					((scaleW * RenderControls.getZoomLevel()) + scaleW / 2 / RenderControls.getZoomLevel())
 							/ RenderControls.getZoomLevel(),
 					((scaleH * RenderControls.getZoomLevel()) + scaleH / 2 / RenderControls.getZoomLevel())
@@ -124,22 +115,22 @@ public class Render {
 
 			g.setColor(new Color(41, 50, 156));
 
-			for (int i = RenderControls.getGridStartX(); i < RenderControls.getGridStartX() + 20000; i += 2
+			for (int i = RenderControls.getGridStartX(); i < RenderControls.getGridStartX() + 40000; i += 2
 					* RenderControls.getGridIntensity()) {
 				g.drawLine(((i - RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel()), 0,
 						((i - RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel()), height);
 			}
-			for (int i = RenderControls.getGridStartX(); i > RenderControls.getGridStartX() - 20000; i -= 2
+			for (int i = RenderControls.getGridStartX(); i > RenderControls.getGridStartX() - 40000; i -= 2
 					* RenderControls.getGridIntensity()) {
 				g.drawLine(((i - RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel()), 0,
 						((i - RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel()), height);
 			}
-			for (int i = RenderControls.getGridStartY(); i < RenderControls.getGridStartY() + 20000; i += 2
+			for (int i = RenderControls.getGridStartY(); i < RenderControls.getGridStartY() + 40000; i += 2
 					* RenderControls.getGridIntensity()) {
 				g.drawLine(0, ((i - RenderControls.getCameraYOffset()) / RenderControls.getZoomLevel()), width,
 						((i - RenderControls.getCameraYOffset()) / RenderControls.getZoomLevel()));
 			}
-			for (int i = RenderControls.getGridStartY(); i > RenderControls.getGridStartY() - 20000; i -= 2
+			for (int i = RenderControls.getGridStartY(); i > RenderControls.getGridStartY() - 40000; i -= 2
 					* RenderControls.getGridIntensity()) {
 				g.drawLine(0, ((i - RenderControls.getCameraYOffset()) / RenderControls.getZoomLevel()), width,
 						((i - RenderControls.getCameraYOffset()) / RenderControls.getZoomLevel()));
@@ -173,13 +164,25 @@ public class Render {
 						((((sprY - (scaleH / 2) * RenderControls.getZoomLevel()) - RenderControls.getCameraYOffset()))
 								/ RenderControls.getZoomLevel()),
 						io);
-				g.setColor(Color.CYAN);
-				g.fillRect((((sprX - 3) - RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel()),
-						((sprY - 3) - RenderControls.getCameraYOffset()) / RenderControls.getZoomLevel(), 6, 6);
+
 			} else {
 				g.setColor(Color.RED);
 				g.fillRect((((sprX - 1) - RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel()),
 						((sprY - 1) - RenderControls.getCameraYOffset()) / RenderControls.getZoomLevel(), 2, 2);
+			}
+		}
+		for (int i = 0; i < DataLists.getObjects().size(); i++) {
+			sprX = DataLists.getObjects().get(i).getX();
+			sprY = DataLists.getObjects().get(i).getY();
+			if (RenderControls.isRot90()) {
+				int t = sprX;
+				sprX = sprY;
+				sprY = -t;
+			}
+			if (RenderControls.isThingsMode()) {
+				g.setColor(Color.CYAN);
+				g.fillRect((((sprX - 3) - RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel()),
+						((sprY - 3) - RenderControls.getCameraYOffset()) / RenderControls.getZoomLevel(), 6, 6);
 			}
 		}
 	}

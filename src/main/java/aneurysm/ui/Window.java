@@ -22,6 +22,7 @@ import aneurysm.editor.EditorControls;
 import aneurysm.io.FileReader;
 import aneurysm.render.Render;
 import aneurysm.render.RenderControls;
+import aneurysm.ui.input.Controls;
 
 public class Window extends JPanel implements KeyListener, MouseListener, MouseWheelListener, MouseMotionListener {
 
@@ -32,6 +33,7 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 	private ComponentLauncher launcher;
 	private EditorControls controls;
 	private static FileReader reader = new FileReader();
+	private static Controls controlSet = new Controls();
 
 	public Window(int width, int height) {
 		this.setLayout(new BorderLayout());
@@ -62,7 +64,7 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 		addMouseMotionListener(this);
 		controls.updateMap(launcher);
 		launcher.setComboNumber(FileReader.getConfig().getCurrentLevel());
-		render = new Render(this);
+		render = new Render();
 	}
 
 	public EditorControls getControls() {
@@ -75,6 +77,10 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 
 	public static FileReader getReader() {
 		return reader;
+	}
+
+	public static Controls getKeyControls() {
+		return controlSet;
 	}
 
 	@Override
@@ -100,44 +106,39 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		int k = arg0.getKeyCode();
-		switch (k) {
-		case KeyEvent.VK_F: {
+		System.out.println("arg0 code " + arg0.getKeyCode());
+
+		if (arg0.getKeyCode() == controlSet.getSnapKey()) {
 			if (RenderControls.isGridSnap())
 				launcher.setSnapOn("Off");
 			else
 				launcher.setSnapOn("On");
 			RenderControls.setGridSnap(!RenderControls.isGridSnap());
 		}
-		case KeyEvent.VK_W: {
-			if ((arg0.getModifiers() & KeyEvent.CTRL_MASK) != 0)
-				controls.saveFile(this);
-			break;
-		}
-		case KeyEvent.VK_S: {
+//		case KeyEvent.VK_W: {
+//			if ((arg0.getModifiers() & KeyEvent.CTRL_MASK) != 0)
+//				controls.saveFile(this);
+//			break;
+//		}
+		if (arg0.getKeyCode() == controlSet.getSaveKey()) {
 			if ((arg0.getModifiers() & KeyEvent.CTRL_MASK) != 0)
 				controls.writeToROM(this);
-			break;
 		}
-		case KeyEvent.VK_R: {
+		if (arg0.getKeyCode() == controlSet.getRotateKey()) {
 			RenderControls.setRot90(!RenderControls.isRot90());
 			launcher.getChb1().setSelected(RenderControls.isRot90());
-			break;
 		}
-		case KeyEvent.VK_G: {
+		if (arg0.getKeyCode() == controlSet.getGridKey()) {
 			RenderControls.cycleGrid();
 			launcher.setGridLabel(RenderControls.getGridIntensity());
-			break;
 		}
-		case KeyEvent.VK_MINUS: {
+		if (arg0.getKeyCode() == controlSet.getZoomOutKey()) {
 			RenderControls.zoom(true, launcher);
-			break;
 		}
-		case KeyEvent.VK_EQUALS: {
+		if (arg0.getKeyCode() == controlSet.getZoomInKey()) {
 			RenderControls.zoom(false, launcher);
-			break;
 		}
-		case KeyEvent.VK_T: {
+		if (arg0.getKeyCode() == controlSet.getThingsKey()) {
 			controls.setThingList();
 			controls.clearSelection();
 			launcher.getSelectPanel().setCurrentImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
@@ -145,9 +146,8 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 			controls.setSelectedInfo("");
 			launcher.setModeLabel("Things");
 			RenderControls.setThingsMode(true);
-			break;
 		}
-		case KeyEvent.VK_L: {
+		if (arg0.getKeyCode() == controlSet.getLinesKey()) {
 			controls.setTextureList();
 			controls.clearSelection();
 			launcher.getSelectPanel().setCurrentImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
@@ -155,48 +155,25 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 			controls.setSelectedInfo("");
 			launcher.setModeLabel("Lines");
 			RenderControls.setLinesMode(true);
-			break;
 		}
-		case KeyEvent.VK_M: {
+		if (arg0.getKeyCode() == controlSet.getMoveObjectKey()) {
 			keyboardMoving = true;
 			queryItemMotion(true);
-			break;
 		}
-		case KeyEvent.VK_SPACE: {
+		if (arg0.getKeyCode() == controlSet.getSelectKey()) {
 			controls.setSelectedItem();
-			break;
 		}
-		case KeyEvent.VK_Z: {
+		if (arg0.getKeyCode() == controlSet.getPanKey()) {
 			keyboardMoving = true;
-			System.out.println("keypand");
 			RenderControls.setPanMode(true);
-			break;
 		}
-		case KeyEvent.VK_V: {
+		if (arg0.getKeyCode() == controlSet.getVertsKey()) {
 			controls.clearSelection();
 			launcher.getSelectPanel().setCurrentImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
 			launcher.getSelectPanel().getItemBox().setEnabled(false);
 			controls.setSelectedInfo("");
 			launcher.setModeLabel("Vertices");
 			RenderControls.setVertsMode(true);
-			break;
-		}
-		case KeyEvent.VK_UP: {
-			RenderControls.setCameraYOffset(RenderControls.getCameraYOffset() + 4);
-			break;
-		}
-		case KeyEvent.VK_DOWN: {
-			RenderControls.setCameraYOffset(RenderControls.getCameraYOffset() - 4);
-			break;
-		}
-		case KeyEvent.VK_LEFT: {
-			RenderControls.setCameraXOffset(RenderControls.getCameraXOffset() + 4);
-			break;
-		}
-		case KeyEvent.VK_RIGHT: {
-			RenderControls.setCameraXOffset(RenderControls.getCameraXOffset() - 4);
-			break;
-		}
 		}
 	}
 
@@ -267,29 +244,28 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
+		System.out.println("arg0 button: " + arg0.getButton());
 		this.requestFocus();
 		mousePoint = arg0.getPoint();
-		if (arg0.getButton() == MouseEvent.BUTTON1) {
+		if (arg0.getButton() == controlSet.getMouseSelect()) {
 			System.out.println("clicky");
 			controls.setSelectedItem();
 		}
-		if (arg0.getButton() == MouseEvent.BUTTON3) {
+		if (arg0.getButton() == controlSet.getMousePan()) {
 			RenderControls.setPanMode(true);
 
 		}
-		if (arg0.getButton() == MouseEvent.BUTTON2) {
+		if (arg0.getButton() == controlSet.getMouseObjectMove()) {
 			queryItemMotion(true);
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		switch (arg0.getButton()) {
-		case MouseEvent.BUTTON3:
-
+		if (arg0.getButton() == controlSet.getMousePan()) {
 			RenderControls.setPanMode(false);
-			break;
-		case MouseEvent.BUTTON2:
+		}
+		if (arg0.getButton() == controlSet.getMouseObjectMove()) {
 			queryItemMotion(false);
 		}
 	}
@@ -563,7 +539,8 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
-		if(mousePoint == null) mousePoint = arg0.getPoint();
+		if (mousePoint == null)
+			mousePoint = arg0.getPoint();
 		int dx = arg0.getX() - mousePoint.x;
 		int dy = arg0.getY() - mousePoint.y;
 		mousePoint = arg0.getPoint();

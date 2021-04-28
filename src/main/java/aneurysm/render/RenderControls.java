@@ -266,7 +266,7 @@ public class RenderControls {
 
 	public static void zoom(boolean inOrOut, ComponentLauncher launcher) {
 		if (inOrOut) {
-			if (zoomLevel < 12) {
+			if (zoomLevel < 32) {
 				zoomLevel += 1;
 				cameraXOffset += 4 * zoomLevel;
 				cameraYOffset += 4 * zoomLevel;

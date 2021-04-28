@@ -1,12 +1,8 @@
 package aneurysm.editor;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import aneurysm.io.FileReader;
@@ -194,12 +190,13 @@ public class EditorControls {
 			DataLists.getVertices().add(v2);
 			DataLists.getLines().add(l);
 		}
+		RenderControls.setCameraXOffset(DataLists.getVertices().get(0).getX());
+		RenderControls.setCameraYOffset(DataLists.getVertices().get(0).getY());
+		RenderControls.setGridStartX(DataLists.getVertices().get(0).getX());
+		RenderControls.setGridStartY(DataLists.getVertices().get(0).getY());
 	}
 
 	public void setMapConfig(ComponentLauncher launcher) {
-
-		RenderControls.setCameraXOffset(FileReader.getConfig().getLevelXOffs(FileReader.getConfig().getCurrentLevel()));
-		RenderControls.setCameraYOffset(FileReader.getConfig().getLevelYOffs(FileReader.getConfig().getCurrentLevel()));
 		RenderControls.setZoomLevel(FileReader.getConfig().getLevelZoom(FileReader.getConfig().getCurrentLevel()));
 		RenderControls.setGridIntensity(FileReader.getConfig().getLevelGrid(FileReader.getConfig().getCurrentLevel()));
 		RenderControls.setRot90(FileReader.getConfig().getLevelRot(FileReader.getConfig().getCurrentLevel()));
@@ -263,19 +260,19 @@ public class EditorControls {
 		return Math.abs(l);
 	}
 
-	public void saveFile(Window window) {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Export Level Data");
-		int option = fileChooser.showSaveDialog(window);
-		if (option == JFileChooser.APPROVE_OPTION) {
-			try {
-				Window.getReader().exportToFile(DataLists.getWalls(), DataLists.getObjects(),
-						fileChooser.getSelectedFile().toString());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+//	public void saveFile(Window window) {
+//		JFileChooser fileChooser = new JFileChooser();
+//		fileChooser.setDialogTitle("Export Level Data");
+//		int option = fileChooser.showSaveDialog(window);
+//		if (option == JFileChooser.APPROVE_OPTION) {
+//			try {
+//				Window.getReader().exportToFile(DataLists.getWalls(), DataLists.getObjects(),
+//						fileChooser.getSelectedFile().toString());
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
 	public void updateMap(ComponentLauncher launcher) {
 		/*
@@ -284,12 +281,11 @@ public class EditorControls {
 		if (!DataLists.getWallImages().isEmpty())
 			DataLists.getWallImages().clear();
 		try {
+			Window.getReader().grabHeaderData(FileReader.getConfig().getLocation());
 			loadData();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		RenderControls.setGridStartX(DataLists.getVertices().get(0).getX());
-		RenderControls.setGridStartY(DataLists.getVertices().get(0).getY());
 
 	}
 
@@ -347,7 +343,13 @@ public class EditorControls {
 							|| ((w.getY1() + 16 > mouseY && w.getY2() - 16 < mouseY) && (w.getX1() - 16 < mouseX)
 									&& (w.getX2() + 16 > mouseX))
 							|| (w.getX1() + 16 < mouseX && w.getY1() + 16 < mouseY && w.getX2() - 16 > mouseX
-									&& w.getY2() - 16 > mouseY)) {
+									&& w.getY2() - 16 > mouseY) ||
+							((w.getX2() + 16 > mouseX && w.getX1() - 16 < mouseX) && (w.getY2() - 16 < mouseY)
+									&& (w.getY1() + 16 > mouseY))
+									|| ((w.getY2() + 16 > mouseY && w.getY1() - 16 < mouseY) && (w.getX2() - 16 < mouseX)
+											&& (w.getX1() + 16 > mouseX))
+									|| (w.getX2() + 16 < mouseX && w.getY2() + 16 < mouseY && w.getX1() - 16 > mouseX
+											&& w.getY1() - 16 > mouseY)) {
 						highlightedIndex = i;
 						highlightedWS = w;
 						itemHighlighted = true;
@@ -530,12 +532,16 @@ public class EditorControls {
 		if (DataLists.getWalls().size() > 0)
 			DataLists.getWalls().clear();
 		DataLists.setWalls(Window.getReader().readWalls(FileReader.getConfig().getLocation()));
+		DataLists.setupColors();
+		Window.getReader().readWallGFX(false, FileReader.getConfig().getLocation());
 		if (RenderControls.isLinesMode())
 			setTextureList();
 		if (RenderControls.isThingsMode())
 			setThingList();
 		host.getLauncher().setSnapOn("Off");
 		host.getLauncher().getChb1().setSelected(RenderControls.isRot90());
+		host.getLauncher().setLevelSelection(!DataLists.isCdOrCart());
+
 		prepLinesAndVerts();
 	}
 
@@ -548,12 +554,14 @@ public class EditorControls {
 
 		for (int i = 0; i < DataLists.getSpriteList().length; i++) {
 
+			if(DataLists.getSpriteList()[i].getOffset() != 0)
 			host.getLauncher().getSelectPanel().getItemBox()
 					.addItem(Integer.toHexString(DataLists.getSpriteList()[i].getObjectNumber()));
 
 		}
 		host.getLauncher().getSelectPanel().getItemBox().setRenderer(new ImageStringRenderer());
 		host.getLauncher().getSelectPanel().getItemBox().addItemListener(host.getLauncher().getSelectPanel());
+		
 	}
 
 	public void setTextureList() {

@@ -4,21 +4,21 @@ import aneurysm.render.RenderControls;
 
 public class ConfigOptions {
 	private String location="";
-	private int[] levelXOffs = {-4270,-4424,11272,10564,-13249,10609,11100,11404,11103,-4272,-4440,7203,-4890,-640,-2138};
-	private int[] levelYOffs = {-5956,-590,-9246,-12680,12880,-7258,-5060,-8595,-4544,-8630,-3376,-7943,8274,12106, 10109};
+//	private int[] levelXOffs = {-4270,-4424,11272,10564,-13249,10609,11100,11404,11103,-4272,-4440,7203,-4890,-640,-2138};
+//	private int[] levelYOffs = {-5956,-590,-9246,-12680,12880,-7258,-5060,-8595,-4544,-8630,-3376,-7943,8274,12106, 10109};
 	private int[] levelGrid = new int[15];
 	private int[] levelZoom = {16,16,16,16,16,16,16,16,16,16,16,16,16,16,16};
 	private boolean[] levelRot = new boolean[15];
 	private int[] levelMode = new int[15];
-	private int getMapSize = levelXOffs.length;
+	private int getMapSize = 15;
 	
 	public int getGetMapSize() {
 		return getMapSize;
 	}
 
 	public void saveMapConfigs() {
-		levelXOffs[currentLevel] = RenderControls.getCameraXOffset();
-		levelYOffs[currentLevel] = RenderControls.getCameraYOffset();
+//		levelXOffs[currentLevel] = RenderControls.getCameraXOffset();
+//		levelYOffs[currentLevel] = RenderControls.getCameraYOffset();
 		levelZoom[currentLevel] = RenderControls.getZoomLevel();
 		levelGrid[currentLevel] = RenderControls.getGridIntensity();
 		levelRot[currentLevel] = RenderControls.isRot90();
@@ -47,21 +47,21 @@ public class ConfigOptions {
 		this.currentLevel = currentLevel;
 	}
 	
-	public int getLevelXOffs(int index) {
-		return levelXOffs[index];
-	}
-
-	public void setLevelXOffs(int levelXOffs, int index) {
-		this.levelXOffs[index] = levelXOffs;
-	}
-
-	public int getLevelYOffs(int index) {
-		return levelYOffs[index];
-	}
-
-	public void setLevelYOffs(int levelYOffs, int index) {
-		this.levelYOffs[index] = levelYOffs;
-	}
+//	public int getLevelXOffs(int index) {
+//		return levelXOffs[index];
+//	}
+//
+//	public void setLevelXOffs(int levelXOffs, int index) {
+//		this.levelXOffs[index] = levelXOffs;
+//	}
+//
+//	public int getLevelYOffs(int index) {
+//		return levelYOffs[index];
+//	}
+//
+//	public void setLevelYOffs(int levelYOffs, int index) {
+//		this.levelYOffs[index] = levelYOffs;
+//	}
 
 	public int getLevelGrid(int index) {
 		return levelGrid[index];

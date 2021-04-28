@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import aneurysm.io.FileReader;
 import aneurysm.ui.DataLists;
@@ -21,95 +22,112 @@ public class AneurysmLauncher {
 
 	private static Window w;
 
-	public static void main(String[] args) throws IOException{
-		FileReader reader = new FileReader();
-		if(!reader.readConfig()) {
-			JFileChooser fc = new JFileChooser();
-			fc.showOpenDialog(fc);
-			FileReader.getConfig().setLocation(fc.getSelectedFile().toString());
-			if(!fc.getSelectedFile().toString().contains(".lev") && !reader.checkForFixedTextures()) {
-				
-				int result = JOptionPane.showConfirmDialog(null, ("The ROM file loaded has the corrupted textures present.  Would you like to patch them?"),
-				"Fix Corrupted Textures?", JOptionPane.YES_NO_OPTION);
-				if(result == JOptionPane.YES_OPTION) {
-					reader.fixCorruptedROMTextures();
+	private static void prepData() {
+		JFileChooser fc = new JFileChooser("Load file...");
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("BIN File", "bin"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("LEV File", "lev"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("Both supported filetypes", "bin", "lev"));
+		int result = fc.showOpenDialog(null);
+		if (result != JFileChooser.CANCEL_OPTION) {
+			String f = fc.getSelectedFile().toString();
+			if (!f.toLowerCase().contains(".lev") && !f.toLowerCase().contains(".bin")) {
+				JOptionPane.showMessageDialog(null, "Please select a valid File.", "Invalid File",
+						JOptionPane.ERROR_MESSAGE);
+			} else {
+				FileReader.getConfig().setLocation(f);
+				if (!fc.getSelectedFile().toString().toLowerCase().contains(".lev")) {
+					pollForFixTextures(fc);
 				}
+				Window.getReader().readNewFile(f);
 			}
+		} else {
+			System.exit(0);
+		}
+	}
+
+	private static void pollForFixTextures(JFileChooser fc) {
+
+		int result = JOptionPane.showConfirmDialog(null,
+				("The ROM file loaded has the corrupted textures present.  Would you like to patch them?"),
+				"Fix Corrupted Textures?", JOptionPane.YES_NO_OPTION);
+		if (result == JOptionPane.YES_OPTION) {
+			Window.getReader().fixCorruptedROMTextures();
+		}
+
+	}
+
+	public static void main(String[] args) throws IOException {
+		FileReader reader = new FileReader();
+		if (!reader.readConfig()) {
+			prepData();
+		} else {
+			if(DataLists.isCdOrCart()) reader.populateCDOffsets();
+			DataLists.setupColors();
+			
 		}
 
 		EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                // TODO code application logic here
+			@Override
+			public void run() {
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				} catch (ClassNotFoundException classNotFoundException) {
+				} catch (InstantiationException instantiationException) {
+				} catch (IllegalAccessException illegalAccessException) {
+				} catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+				}
 
-                try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (ClassNotFoundException classNotFoundException) {
-                } catch (InstantiationException instantiationException) {
-                } catch (IllegalAccessException illegalAccessException) {
-                } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                }
-                
-                JFrame frame = new JFrame("Aneurysm");
-                frame.setSize(800+144, 800);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setLayout(new BorderLayout());
-                frame.setUndecorated(false);
-                frame.addWindowListener(new Listener());
-                frame.setIgnoreRepaint(true);
-                frame.setMinimumSize(new Dimension(525,625));
-                frame.requestFocus();
-                w=new Window(frame.getWidth(),frame.getHeight());
-                frame.add(w);
-                frame.setVisible(true);
-            }
-        	class Listener implements WindowListener{
+				JFrame frame = new JFrame("Aneurysm");
+				frame.setSize(800 + 144, 800);
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setLayout(new BorderLayout());
+				frame.setUndecorated(false);
+				frame.addWindowListener(new Listener());
+				frame.setIgnoreRepaint(true);
+				frame.setMinimumSize(new Dimension(525, 625));
+				frame.requestFocus();
+				w = new Window(frame.getWidth(), frame.getHeight());
+				frame.add(w);
+				frame.setVisible(true);
+			}
 
-        		@Override
-        		public void windowActivated(WindowEvent e) {
-        			// TODO Auto-generated method stub
-        			
-        		}
+			class Listener implements WindowListener {
 
-        		@Override
-        		public void windowClosed(WindowEvent e) {
-        			System.exit(0);
-        		}
+				@Override
+				public void windowActivated(WindowEvent e) {
+				}
 
-        		@Override
-        		public void windowClosing(WindowEvent e) {
-        			FileReader.getConfig().saveMapConfigs();
-        			reader.writeConfig();
-        			if(DataLists.isChangesMade()) {
-        				FileReader.fixChecksum();
-        			}
-        		}
+				@Override
+				public void windowClosed(WindowEvent e) {
+					System.exit(0);
+				}
 
-        		@Override
-        		public void windowDeactivated(WindowEvent e) {
-        			// TODO Auto-generated method stub
-        			
-        		}
+				@Override
+				public void windowClosing(WindowEvent e) {
+					FileReader.getConfig().saveMapConfigs();
+					reader.writeConfig();
+					if (DataLists.isChangesMade()) {
+						FileReader.fixChecksum();
+					}
+				}
 
-        		@Override
-        		public void windowDeiconified(WindowEvent e) {
-        			// TODO Auto-generated method stub
-        			
-        		}
+				@Override
+				public void windowDeactivated(WindowEvent e) {
+				}
 
-        		@Override
-        		public void windowIconified(WindowEvent e) {
-        			// TODO Auto-generated method stub
-        			
-        		}
+				@Override
+				public void windowDeiconified(WindowEvent e) {
+				}
 
-        		@Override
-        		public void windowOpened(WindowEvent e) {
-        			// TODO Auto-generated method stub
-        			
-        		}
-        		
-        	}
-        });
+				@Override
+				public void windowIconified(WindowEvent e) {
+				}
+
+				@Override
+				public void windowOpened(WindowEvent e) {
+				}
+
+			}
+		});
 	}
 }
