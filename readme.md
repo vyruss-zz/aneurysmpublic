@@ -16,7 +16,7 @@ Aneurysm is a (limited) level editor for the 1994 Megadrive and Mega CD FPS game
 
 ### What's New version 0.6.2
  - I honestly have no idea what's new anymore - last public commit was nearly 2 years ago.  I *think* I added support to import the Sega CD extra enemy in 0.0.6, some bug fixes occurred and others.
- - This release has added something that was trivial and should have been from day one - Door colors in the editor view.  The level display has become just a little bit more colorful.
+ - This release (0.6.2) has added something that was trivial and should have been from day one - Door colors in the editor view.  The level display has become just a little bit more colorful.
 
 ### Default Controls and Operations
   - Left Mouse Button / Space: Select highlighted item
