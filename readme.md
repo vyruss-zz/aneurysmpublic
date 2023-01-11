@@ -1,6 +1,6 @@
 
 # Aneurysm
-Current version: 0.5
+Current version: 0.6.2
 Aneurysm is a (limited) level editor for the 1994 Megadrive and Mega CD FPS game, "Bloodshot" written in Java.  At present, it features:
 
   - The ability to load and read all levels in the ROM or as CD version .LEV.
@@ -14,12 +14,9 @@ Aneurysm is a (limited) level editor for the 1994 Megadrive and Mega CD FPS game
   - Remembers the last file being edited, the last level being edited, its orientation, mode, zoom and grid level
   - Automatic checksum correction for ROM version
 
-### What's New version 0.5
- - Sega CD Level Support! Aneurysm will now automatically detect if you have loaded the ROM or a .LEV file, and the rest of the experience remains identical.
- - New palette editor! This allows you to change the palettes seen in-game.
- - New sprite editor! Sprites are stored as linear bitmap data and are difficult to edit with a tile editor.  This should hopefully alleviate this problem for those who want to change the sprites (albeit still limited by hardcoded sprite dimensions in each .LEV or in ROM for now - these are respected by the sprite editor)
- - Editor control configuration!
- - Various bugfixes.
+### What's New version 0.6.2
+ - I honestly have no idea what's new anymore - last public commit was nearly 2 years ago.  I *think* I added support to import the Sega CD extra enemy in 0.0.6, some bug fixes occurred and others.
+ - This release has added something that was trivial and should have been from day one - Door colors in the editor view.  The level display has become just a little bit more colorful.
 
 ### Default Controls and Operations
   - Left Mouse Button / Space: Select highlighted item
