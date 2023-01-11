@@ -288,6 +288,22 @@ public class EditorControls {
 		}
 
 	}
+	
+	private void setHighlightedThing(MapObjectStructure m, int i) {
+		RenderControls.setHighlightedX(m.getX());
+		RenderControls.setHighlightedY(m.getY());
+		RenderControls.setHighlightedWidth(16);
+		RenderControls.setHighlightedHeight(16);
+		RenderControls.setHighlightedInfo("" + m.getThingID());
+		highlightedInfo = ("<html>Thing Number: " + i + "<br/>Thing x: " + m.getX() + "<br/>Thing y: "
+				+ m.getY() + "<br/>" + DataLists.getThingAttributes().get(m.getThingID())
+				+ "<br/>Offset Major: 0x" + Integer.toHexString(m.getOffset_major())
+				+ "<br/>Offset Minor: " + Integer.toHexString(m.getOffset_minor()) + "</html>");
+		host.getLauncher().getSelectPanel().setItemInfo(highlightedInfo);
+		host.getLauncher().getSelectPanel().setCurrentImage(DataLists.getObjectImage(m.getThingID()));
+		host.getLauncher().getSelectPanel().getItemBox()
+				.setSelectedItem("0x0" + Integer.toHexString(m.getThingID()));
+	}
 
 	public void pollItemHighlight(int mouseX, int mouseY) {
 		if (!itemSelected && selectedIndex == -1) {
@@ -301,19 +317,9 @@ public class EditorControls {
 						currentStoredXPos = 0;
 						currentStoredYPos = 0;
 						RenderControls.setItemHighlighted(true);
-						RenderControls.setHighlightedX(m.getX());
-						RenderControls.setHighlightedY(m.getY());
-						RenderControls.setHighlightedWidth(16);
-						RenderControls.setHighlightedHeight(16);
-						RenderControls.setHighlightedInfo("" + m.getThingID());
-						highlightedInfo = ("<html>Thing Number: " + i + "<br/>Thing x: " + m.getX() + "<br/>Thing y: "
-								+ m.getY() + "<br/>Thing ID: 0x" + Integer.toHexString(m.getThingID())
-								+ "<br/>Offset Major: 0x" + Integer.toHexString(m.getOffset_major())
-								+ "<br/>Offset Minor: " + Integer.toHexString(m.getOffset_minor()) + "</html>");
-						host.getLauncher().getSelectPanel().setItemInfo(highlightedInfo);
-						host.getLauncher().getSelectPanel().setCurrentImage(DataLists.getObjectImage(m.getThingID()));
-						host.getLauncher().getSelectPanel().getItemBox()
-								.setSelectedItem("0x0" + Integer.toHexString(m.getThingID()));
+						
+						setHighlightedThing(m, i);
+						
 						highlightedMOS = m;
 						highlightedIndex = i;
 						itemHighlighted = true;
@@ -343,13 +349,13 @@ public class EditorControls {
 							|| ((w.getY1() + 16 > mouseY && w.getY2() - 16 < mouseY) && (w.getX1() - 16 < mouseX)
 									&& (w.getX2() + 16 > mouseX))
 							|| (w.getX1() + 16 < mouseX && w.getY1() + 16 < mouseY && w.getX2() - 16 > mouseX
-									&& w.getY2() - 16 > mouseY) ||
-							((w.getX2() + 16 > mouseX && w.getX1() - 16 < mouseX) && (w.getY2() - 16 < mouseY)
+									&& w.getY2() - 16 > mouseY)
+							|| ((w.getX2() + 16 > mouseX && w.getX1() - 16 < mouseX) && (w.getY2() - 16 < mouseY)
 									&& (w.getY1() + 16 > mouseY))
-									|| ((w.getY2() + 16 > mouseY && w.getY1() - 16 < mouseY) && (w.getX2() - 16 < mouseX)
-											&& (w.getX1() + 16 > mouseX))
-									|| (w.getX2() + 16 < mouseX && w.getY2() + 16 < mouseY && w.getX1() - 16 > mouseX
-											&& w.getY1() - 16 > mouseY)) {
+							|| ((w.getY2() + 16 > mouseY && w.getY1() - 16 < mouseY) && (w.getX2() - 16 < mouseX)
+									&& (w.getX1() + 16 > mouseX))
+							|| (w.getX2() + 16 < mouseX && w.getY2() + 16 < mouseY && w.getX1() - 16 > mouseX
+									&& w.getY1() - 16 > mouseY)) {
 						highlightedIndex = i;
 						highlightedWS = w;
 						itemHighlighted = true;
@@ -367,13 +373,14 @@ public class EditorControls {
 								+ "<br/>Start Y: " + w.getY1() + "<br/>End X: " + w.getX2() + "<br/>End Y: " + w.getY2()
 								+ "<br/>Length: " + length + "<br/>Angle: " + angle + "<br/>Texture ID: 0x00"
 								+ Integer.toHexString(w.getTextureID()) + "<br/>Texture Length: 0x"
-								+ Integer.toHexString(w.getTextureScale()) + "<br/>Line Type: " + (w.getDoorType() == 0 ? "Wall" : "Door") +  "</html>");
+								+ Integer.toHexString(w.getTextureScale()) + "<br/>Line Type: "
+								+ (w.getDoorType() == 0 ? "Wall" : "Door") + "</html>");
 
 						host.getLauncher().getSelectPanel().setItemInfo(highlightedInfo);
 						int imageOffset = w.getTextureID();
-						
-							host.getLauncher().getSelectPanel().setImage(imageOffset);
-						
+
+						host.getLauncher().getSelectPanel().setImage(imageOffset);
+
 						host.getLauncher().getSelectPanel().getItemBox()
 								.setSelectedItem(Integer.toHexString(w.getTextureID()));
 
@@ -467,7 +474,8 @@ public class EditorControls {
 			selInfor = highlightedInfo;
 			selectedInfo = RenderControls.getHighlightedInfo();
 			RenderControls.setSelectedInfo(selectedInfo);
-			if(!RenderControls.isVertsMode()) host.getLauncher().getSelectPanel().getItemBox().setVisible(true);
+			if (!RenderControls.isVertsMode())
+				host.getLauncher().getSelectPanel().getItemBox().setVisible(true);
 			if (RenderControls.isThingsMode())
 				host.getLauncher().getSelectPanel().getItemBox()
 						.setSelectedItem(Integer.toHexString(selectedMOS.getThingID()));
@@ -479,7 +487,7 @@ public class EditorControls {
 		}
 
 		else {
-			itemHighlighted=false;
+			itemHighlighted = false;
 			RenderControls.setItemHighlighted(false);
 			clearSelection();
 			host.getLauncher().getSelectPanel().hideWallControls();
@@ -487,10 +495,13 @@ public class EditorControls {
 	}
 
 	public void updateSelectedItem() {
-		if (RenderControls.isThingsMode())
+		if (RenderControls.isThingsMode()) {
 			DataLists.getObjects().set(selectedIndex, selectedMOS);
-		if (RenderControls.isLinesMode())
+			setHighlightedThing(selectedMOS, selectedIndex);
+		}
+		if (RenderControls.isLinesMode()) {
 			DataLists.getWalls().set(selectedIndex, selectedWS);
+		}
 	}
 
 	public void clearSelection() {
@@ -554,14 +565,14 @@ public class EditorControls {
 
 		for (int i = 0; i < DataLists.getSpriteList().length; i++) {
 
-			if(DataLists.getSpriteList()[i].getOffset() != 0)
-			host.getLauncher().getSelectPanel().getItemBox()
-					.addItem(Integer.toHexString(DataLists.getSpriteList()[i].getObjectNumber()));
+			if (DataLists.getSpriteList()[i].getOffset() != 0)
+				host.getLauncher().getSelectPanel().getItemBox()
+						.addItem(Integer.toHexString(DataLists.getSpriteList()[i].getObjectNumber()));
 
 		}
 		host.getLauncher().getSelectPanel().getItemBox().setRenderer(new ImageStringRenderer());
 		host.getLauncher().getSelectPanel().getItemBox().addItemListener(host.getLauncher().getSelectPanel());
-		
+
 	}
 
 	public void setTextureList() {

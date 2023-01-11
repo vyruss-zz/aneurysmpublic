@@ -184,7 +184,6 @@ public class FileReader {
 	}
 
 	private void readByteArrayToImage(Byte[][] data, BufferedImage image) {
-//		int num = Integer.parseInt(config.getLocation().replaceAll("[^0-9]", "")) - 1;
 		Color[] pal = DataLists.getLevelPal();
 		int yOffs = 0;
 		int xOffs = 0;
@@ -471,11 +470,13 @@ public class FileReader {
 			rin.seek(0x02);
 			if (rin.readInt() == 0x30 && rin.length() < 0x1FFFFF) {
 				System.out.println("cd");
+				DataLists.setEnemyPatchedIn(false);
 				DataLists.setCdOrCart(true);
 				levelHeaderLocation = 0;
 			} else {
+				rin.seek(0x67D2);
+				DataLists.setEnemyPatchedIn(rin.readInt() == 0x0EA7F00D);
 				rin.seek(0xF9D0);
-				System.out.println("rom");
 				levelHeaderLocation = rin.readInt();
 				DataLists.setCdOrCart(false);
 			}
@@ -485,7 +486,8 @@ public class FileReader {
 			if (DataLists.isCdOrCart()) {
 				populateCDOffsets();
 			}
-
+			DataLists.setupColors();
+			DataLists.setThingAttributes();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -495,7 +497,6 @@ public class FileReader {
 
 	public static Image readFirstThings(int id) {
 		System.out.println("id " + id);
-		ArrayList<Integer> list = new ArrayList<>();
 		BufferedImage im;
 		int length = 0;
 		int data = 0;
@@ -690,7 +691,8 @@ public class FileReader {
 			out.write("vertsKey=" + Window.getKeyControls().getVertsKey() + "\n");
 			out.write("zoomInKey=" + Window.getKeyControls().getZoomInKey() + "\n");
 			out.write("zoomOutKey=" + Window.getKeyControls().getZoomOutKey() + "\n");
-
+			out.write("enemyPatchedIn=" + (DataLists.isEnemyPatchedIn() ? "1" : "0")+"\n");
+			out.write("noCD=" + (config.isNoCD() ? "1" : "0")+"\n");
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -792,6 +794,24 @@ public class FileReader {
 				Window.getKeyControls().setZoomOutKey(Integer.parseInt(fins.nextLine().split("=")[1]));
 			} catch (Exception e) {
 				System.out.println("legacy config found, loading default controls");
+			}
+			try {
+				byte patched = Byte.parseByte(fins.nextLine().split("=")[1]);
+				if (patched == 0)
+					DataLists.setEnemyPatchedIn(false);
+				else
+					DataLists.setEnemyPatchedIn(true);
+			} catch (Exception e) {
+				DataLists.setEnemyPatchedIn(false);
+			}
+			try {
+				byte nocd = Byte.parseByte(fins.nextLine().split("=")[1]);
+				if (nocd == 0)
+					config.setNoCD(false);
+				else
+					config.setNoCD(true);
+			} catch (Exception e) {
+				config.setNoCD(false);
 			}
 			configLoaded = true;
 			fins.close();

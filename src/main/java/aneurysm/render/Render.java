@@ -68,15 +68,31 @@ public class Render {
 	}
 
 	public void drawLines(Graphics g) {
-		if (RenderControls.isLinesMode())
-			g.setColor(Color.WHITE);
-		else
-			g.setColor(Color.gray);
 		for (int i = 0; i < DataLists.getLines().size(); i++) {
 			int sx = DataLists.getLines().get(i).getStartV().getX();
 			int sy = DataLists.getLines().get(i).getStartV().getY();
 			int ex = DataLists.getLines().get(i).getEndV().getX();
 			int ey = DataLists.getLines().get(i).getEndV().getY();
+			switch (DataLists.getWalls().get(i).getDoorType()) {
+				case 0:
+					g.setColor(Color.gray);
+					break;
+				case 1:
+					g.setColor(Color.green);
+					break;
+				case 2:
+					g.setColor(Color.magenta);
+					break;
+				case 3:
+					g.setColor(Color.yellow);
+					break;
+				case 4:
+					g.setColor(Color.red);
+					break;
+				case 5:
+					g.setColor(Color.white);
+					break;
+			}
 			if (RenderControls.isRot90()) {
 				int t = sy;
 				sy = -sx;
@@ -151,8 +167,8 @@ public class Render {
 				sprX = sprY;
 				sprY = -t;
 			}
+			try {
 			if (RenderControls.isThingsMode()) {
-
 				int sprW = currentSprite.getWidth(io);
 				int sprH = currentSprite.getHeight(io);
 				int scaleW = sprW * 2 / ((RenderControls.getZoomLevel() / 2) + 1);
@@ -170,6 +186,7 @@ public class Render {
 				g.fillRect((((sprX - 1) - RenderControls.getCameraXOffset()) / RenderControls.getZoomLevel()),
 						((sprY - 1) - RenderControls.getCameraYOffset()) / RenderControls.getZoomLevel(), 2, 2);
 			}
+			} catch (Exception e) {}
 		}
 		for (int i = 0; i < DataLists.getObjects().size(); i++) {
 			sprX = DataLists.getObjects().get(i).getX();

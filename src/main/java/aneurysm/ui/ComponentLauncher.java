@@ -24,6 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import aneurysm.io.FileReader;
+import aneurysm.patch.enemyimporter.EnemyImporter;
 import aneurysm.render.RenderControls;
 import aneurysm.ui.controlEd.ControlEditor;
 import aneurysm.ui.palEd.PaletteEditor;
@@ -34,6 +35,8 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 	private JMenuBar bar;
 	private JMenuItem closeOption;
 	private JMenuItem openOption;
+	private JMenuItem dumpPalette;
+	private JMenuItem patchInCDEnemy;
 	private JLabel zoomLabel;
 	private JLabel mousePos;
 	private JLabel gridSize;
@@ -101,8 +104,10 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 	private void showOpenDialog(Window frame) {
 		JFileChooser fc = new JFileChooser("Load file...");
 		fc.addChoosableFileFilter(new FileNameExtensionFilter("BIN File", "bin"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("GEN File", "gen"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("MD File", "md"));
 		fc.addChoosableFileFilter(new FileNameExtensionFilter("LEV File", "lev"));
-		fc.addChoosableFileFilter(new FileNameExtensionFilter("Both supported filetypes", "bin", "lev"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("All supported filetypes", "bin", "gen", "lev", "md"));
 		int result = fc.showOpenDialog(null);
 		if (result != JFileChooser.CANCEL_OPTION) {
 			String f = fc.getSelectedFile().toString();
@@ -119,11 +124,13 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 					if (resultCh == JOptionPane.YES_OPTION) {
 						Window.getReader().fixCorruptedROMTextures();
 					}
+
 				}
 
 				Window.getReader().readNewFile(f);
-			}
 
+			}
+			checkIfNeedCDEnemyPatched();
 		} else {
 			return;
 		}
@@ -143,12 +150,16 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 	}
 
 	private void addComponents(Window frame) {
+		dumpPalette = new JMenuItem("Dump Palette");
+		dumpPalette.addActionListener(this);
 		editPalette = new JButton("Edit Palette");
 		editPalette.addActionListener(this);
 		editSprites = new JButton("Edit Sprites");
 		editSprites.addActionListener(this);
 		config = new JMenuItem("Configuration");
 		config.addActionListener(this);
+		patchInCDEnemy = new JMenuItem("Patch In CD Enemy");
+		patchInCDEnemy.addActionListener(this);
 		jt = new JTextArea("Nothing highlighted.");
 		openOption = new JMenuItem("Open...");
 		jt.setSize(frame.getWidth(), 32);
@@ -171,7 +182,10 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 		menu = new JMenu("File");
 		bar.add(menu);
 		menu.add(openOption);
+		menu.add(dumpPalette);
 		menu.add(config);
+		menu.add(patchInCDEnemy);
+		checkIfNeedCDEnemyPatched();
 		menu.add(closeOption);
 		closeOption.addActionListener(this);
 		chb1.addActionListener(this);
@@ -192,6 +206,13 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 		cb1.addItemListener(this);
 	}
 
+	public void checkIfNeedCDEnemyPatched() {
+
+		patchInCDEnemy.setVisible(!DataLists.isEnemyPatchedIn() && !DataLists.isCdOrCart());
+		patchInCDEnemy.setEnabled(!DataLists.isEnemyPatchedIn() && !DataLists.isCdOrCart());
+
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		String cmd = arg0.getActionCommand();
@@ -201,6 +222,9 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 		}
 		if (cmd.equals("Open...")) {
 			showOpenDialog(host);
+		}
+		if (cmd.equals("Dump Palette")) {
+			showPaletteDump();
 		}
 		if (cmd.equals("Rotate 90")) {
 			RenderControls.setRot90(!RenderControls.isRot90());
@@ -220,6 +244,48 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 			config.setEnabled(false);
 			createNewConfigWindow();
 		}
+
+		if (cmd.equals("Patch In CD Enemy")) {
+			patchInCDEnemy.setEnabled(false);
+			createNewCDEnemyPatchWindow();
+		}
+	}
+
+	private void showPaletteDump() {
+		String dumps = "";
+		for (int i = 0; i < DataLists.getLevelPal().length; i++) {
+			dumps += i + 1 + ": "
+					+ String.format("%02x%02x%02x", DataLists.getLevelPal()[i].getRed() & 0x000000FF,
+							DataLists.getLevelPal()[i].getGreen() & 0x000000FF,
+							DataLists.getLevelPal()[i].getBlue() & 0x000000FF)
+					+ " ";
+			if (i == 15)
+				dumps += "\n";
+		}
+		JFrame frame = new JFrame("Palette Dump");
+		frame.setSize(600, 200);
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.add(new PalOutWindow(dumps));
+		frame.setVisible(true);
+		frame.addWindowListener(new Listener());
+		dumpPalette.setEnabled(false);
+	}
+
+	private void createNewCDEnemyPatchWindow() {
+		EnemyImporter im = new EnemyImporter();
+		boolean vis = im.kickoff();
+		patchInCDEnemy.setVisible(!vis);
+		patchInCDEnemy.setEnabled(!vis);
+		DataLists.setEnemyPatchedIn(vis);
+		if(vis) {
+			try {
+				DataLists.setupColors();
+				host.getControls().loadData();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void createNewConfigWindow() {
@@ -235,11 +301,11 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 	public JButton getPaletteEditorButton() {
 		return editPalette;
 	}
-	
+
 	public JButton getSpriteEditorButton() {
 		return editSprites;
 	}
-	
+
 	private void createNewPalEdWindow() {
 		JFrame frame = new JFrame("Palette Editor");
 		frame.setSize(500, 300);
@@ -282,19 +348,24 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 			cb1.transferFocusBackward();
 		}
 	}
-	
+
 	private class Listener implements WindowListener {
 		@Override
 		public void windowActivated(WindowEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void windowClosed(WindowEvent arg0) {
-			if(!editPalette.isEnabled()) editPalette.setEnabled(true);
-			if(!editSprites.isEnabled()) editSprites.setEnabled(true);
-			if(!config.isEnabled()) config.setEnabled(true);
+			if (!editPalette.isEnabled())
+				editPalette.setEnabled(true);
+			if (!editSprites.isEnabled())
+				editSprites.setEnabled(true);
+			if (!config.isEnabled())
+				config.setEnabled(true);
+			if (!dumpPalette.isEnabled())
+				dumpPalette.setEnabled(true);
 		}
 
 		@Override
@@ -305,25 +376,25 @@ public class ComponentLauncher implements ActionListener, ItemListener {
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void windowDeiconified(WindowEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void windowIconified(WindowEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void windowOpened(WindowEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
 }

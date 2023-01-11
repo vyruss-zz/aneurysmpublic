@@ -166,7 +166,9 @@ public class RenderControls {
 	}
 
 	public static void setCameraXOffset(int cameraXOffset) {
-		RenderControls.cameraXOffset = cameraXOffset;
+		if(cameraXOffset < -32768) RenderControls.cameraXOffset = -32768;
+		else if (cameraXOffset > 32767) RenderControls.cameraXOffset = 32767;
+		else RenderControls.cameraXOffset = cameraXOffset;
 	}
 
 	public static int getCameraYOffset() {
@@ -174,7 +176,9 @@ public class RenderControls {
 	}
 
 	public static void setCameraYOffset(int cameraYOffset) {
-		RenderControls.cameraYOffset = cameraYOffset;
+		if(cameraYOffset < -32768) RenderControls.cameraYOffset = -32768;
+		else if (cameraYOffset > 32767) RenderControls.cameraYOffset = 32767;
+		else RenderControls.cameraYOffset = cameraYOffset;
 	}
 
 	public static boolean isThingsMode() {

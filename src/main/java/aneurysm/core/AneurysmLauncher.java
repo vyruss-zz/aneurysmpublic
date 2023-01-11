@@ -25,8 +25,10 @@ public class AneurysmLauncher {
 	private static void prepData() {
 		JFileChooser fc = new JFileChooser("Load file...");
 		fc.addChoosableFileFilter(new FileNameExtensionFilter("BIN File", "bin"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("GEN File", "gen"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("MD File", "md"));
 		fc.addChoosableFileFilter(new FileNameExtensionFilter("LEV File", "lev"));
-		fc.addChoosableFileFilter(new FileNameExtensionFilter("Both supported filetypes", "bin", "lev"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("All supported filetypes", "bin", "gen", "lev", "md"));
 		int result = fc.showOpenDialog(null);
 		if (result != JFileChooser.CANCEL_OPTION) {
 			String f = fc.getSelectedFile().toString();
@@ -58,6 +60,7 @@ public class AneurysmLauncher {
 
 	public static void main(String[] args) throws IOException {
 		FileReader reader = new FileReader();
+
 		if (!reader.readConfig()) {
 			prepData();
 		} else {
@@ -66,6 +69,8 @@ public class AneurysmLauncher {
 			
 		}
 
+
+		
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -76,19 +81,23 @@ public class AneurysmLauncher {
 				} catch (IllegalAccessException illegalAccessException) {
 				} catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
 				}
-
-				JFrame frame = new JFrame("Aneurysm");
-				frame.setSize(800 + 144, 800);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setLayout(new BorderLayout());
-				frame.setUndecorated(false);
-				frame.addWindowListener(new Listener());
-				frame.setIgnoreRepaint(true);
-				frame.setMinimumSize(new Dimension(525, 625));
-				frame.requestFocus();
-				w = new Window(frame.getWidth(), frame.getHeight());
-				frame.add(w);
-				frame.setVisible(true);
+				
+				try {
+					JFrame frame = new JFrame("Aneurysm");
+					frame.setSize(800 + 144, 800);
+					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					frame.setLayout(new BorderLayout());
+					frame.setUndecorated(false);
+					frame.addWindowListener(new Listener());
+					frame.setIgnoreRepaint(true);
+					frame.setMinimumSize(new Dimension(525, 625));
+					frame.requestFocus();
+					w = new Window(frame.getWidth(), frame.getHeight());
+					frame.add(w);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 
 			class Listener implements WindowListener {
