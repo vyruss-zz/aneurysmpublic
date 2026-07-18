@@ -6,7 +6,7 @@ public class WallStructure {
 	private short textureScale;
 	private byte doorType, doorNumber, doorNSLow, doorNSHigh, doorWELow, doorWEHigh;
 
-	
+
 
 	public WallStructure(short x1, short x2, short y1, short y2, int textureID, short textureScale, byte doorType,
 			byte doorNumber, byte doorNSLow, byte doorNSHigh, byte doorWELow, byte doorWEHigh) {

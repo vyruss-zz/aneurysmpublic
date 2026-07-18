@@ -1,6 +1,6 @@
 
 # Aneurysm
-Current version: 0.5
+Current version: 0.1.0
 Aneurysm is a (limited) level editor for the 1994 Megadrive and Mega CD FPS game, "Bloodshot" written in Java.  At present, it features:
 
   - The ability to load and read all levels in the ROM or as CD version .LEV.
@@ -14,13 +14,16 @@ Aneurysm is a (limited) level editor for the 1994 Megadrive and Mega CD FPS game
   - Remembers the last file being edited, the last level being edited, its orientation, mode, zoom and grid level
   - Automatic checksum correction for ROM version
 
-### What's New version 0.5
- - Sega CD Level Support! Aneurysm will now automatically detect if you have loaded the ROM or a .LEV file, and the rest of the experience remains identical.
- - New palette editor! This allows you to change the palettes seen in-game.
- - New sprite editor! Sprites are stored as linear bitmap data and are difficult to edit with a tile editor.  This should hopefully alleviate this problem for those who want to change the sprites (albeit still limited by hardcoded sprite dimensions in each .LEV or in ROM for now - these are respected by the sprite editor)
- - Editor control configuration!
- - Various bugfixes.
+### What's New version 0.1.0
+ - Lots of refactoring.
+ - Added a lot of new tools. Level Header Editor, Actor Definition Editor, Plasma Node Definition Editor, Projectile Editor, Tilemap Editor, Minimap Viewer
+ - Fixed some bugs. Greatly increased the time of loading new data.
+ - Enhancements for the Sega CD that leverage all of the level files, as well as SHELL.BIN (holds the actor and other definitions), MAINOS.BIN (data structures) and SLIDES.BIN (for intro slides)
+ - Added a data extractor tool under the file menu. This is for the officially released EU version only.
+ - And other tweaks and fixes.
 
+## Data Extraction note
+ - The way this works is that it retrieves all of the major data such that structures are file relative. For instance, sprites are stored in ROM starting at 0x11B9D6 with definition for things and sprite headers interleaved throughout. This starts at 0 and modifies accordingly.  This is to support using the data from an external program more easily.
 ### Default Controls and Operations
   - Left Mouse Button / Space: Select highlighted item
      * For simplicity, only one item can be selected at a time and will prevent highlighting of other items until the selected item is deselected.

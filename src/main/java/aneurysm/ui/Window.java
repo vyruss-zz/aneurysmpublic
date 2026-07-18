@@ -27,13 +27,13 @@ import aneurysm.ui.input.Controls;
 public class Window extends JPanel implements KeyListener, MouseListener, MouseWheelListener, MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
-	private Render render;
+	private final Render render;
 	private static int width;
 	private static int height;
-	private ComponentLauncher launcher;
-	private EditorControls controls;
-	private static FileReader reader = new FileReader();
-	private static Controls controlSet = new Controls();
+	private final ComponentLauncher launcher;
+	private final EditorControls controls;
+	private static final FileReader reader = new FileReader();
+	private static final Controls controlSet = new Controls();
 
 	public Window(int width, int height) {
 		this.setLayout(new BorderLayout());
@@ -63,7 +63,7 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 		addMouseWheelListener(this);
 		addMouseMotionListener(this);
 		controls.updateMap(launcher);
-		launcher.setComboNumber(FileReader.getConfig().getCurrentLevel());
+		launcher.setComboNumber(Window.getReader().getConfig().getCurrentLevel());
 		render = new Render();
 	}
 
@@ -126,7 +126,7 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 		}
 		if (arg0.getKeyCode() == controlSet.getRotateKey()) {
 			RenderControls.setRot90(!RenderControls.isRot90());
-			launcher.getChb1().setSelected(RenderControls.isRot90());
+			launcher.getRotateChb().setSelected(RenderControls.isRot90());
 		}
 		if (arg0.getKeyCode() == controlSet.getGridKey()) {
 			RenderControls.cycleGrid();
@@ -336,11 +336,7 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0) {
 		int notches = arg0.getWheelRotation();
-		if (notches < 0) {
-			RenderControls.zoom(false, launcher);
-		} else {
-			RenderControls.zoom(true, launcher);
-		}
+        RenderControls.zoom(notches >= 0, launcher);
 
 	}
 
@@ -371,9 +367,9 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 			controls.getHighlightedWS().setX1((short) (controls.getHighlightedWS().getX1() + (dx)));
 			controls.getHighlightedWS().setX2((short) (controls.getHighlightedWS().getX2() + (dx)));
 			DataLists.getVertices().get(controls.getHighlightedIndex() * 2)
-					.setX((short) controls.getHighlightedWS().getX1());
+					.setX(controls.getHighlightedWS().getX1());
 			DataLists.getVertices().get((controls.getHighlightedIndex() * 2) + 1)
-					.setX((short) controls.getHighlightedWS().getX2());
+					.setX(controls.getHighlightedWS().getX2());
 			DataLists.getWalls().set(controls.getHighlightedIndex(), controls.getHighlightedWS());
 			RenderControls.setHighlightedWidth(controls.getHighlightedWS().getX2());
 			RenderControls.setHighlightedHeight(controls.getHighlightedWS().getY2());
@@ -407,9 +403,9 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 			controls.getHighlightedWS().setY1((short) (controls.getHighlightedWS().getY1() + (dy)));
 			controls.getHighlightedWS().setY2((short) (controls.getHighlightedWS().getY2() + (dy)));
 			DataLists.getVertices().get(controls.getHighlightedIndex() * 2)
-					.setY((short) controls.getHighlightedWS().getY1());
+					.setY(controls.getHighlightedWS().getY1());
 			DataLists.getVertices().get((controls.getHighlightedIndex() * 2) + 1)
-					.setY((short) controls.getHighlightedWS().getY2());
+					.setY(controls.getHighlightedWS().getY2());
 			DataLists.getWalls().set(controls.getHighlightedIndex(), controls.getHighlightedWS());
 			RenderControls.setHighlightedWidth(controls.getHighlightedWS().getX2());
 			RenderControls.setHighlightedHeight(controls.getHighlightedWS().getY2());
@@ -472,13 +468,13 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 				controls.getHighlightedWS()
 						.setY2((short) (controls.getHighlightedWS().getY2() + (dx * RenderControls.getZoomLevel())));
 				DataLists.getVertices().get(controls.getHighlightedIndex() * 2)
-						.setX((short) controls.getHighlightedWS().getX1());
+						.setX(controls.getHighlightedWS().getX1());
 				DataLists.getVertices().get(controls.getHighlightedIndex() * 2)
-						.setY((short) controls.getHighlightedWS().getY1());
+						.setY(controls.getHighlightedWS().getY1());
 				DataLists.getVertices().get((controls.getHighlightedIndex() * 2) + 1)
-						.setX((short) controls.getHighlightedWS().getX2());
+						.setX(controls.getHighlightedWS().getX2());
 				DataLists.getVertices().get((controls.getHighlightedIndex() * 2) + 1)
-						.setY((short) controls.getHighlightedWS().getY2());
+						.setY(controls.getHighlightedWS().getY2());
 				DataLists.getWalls().set(controls.getHighlightedIndex(), controls.getHighlightedWS());
 				RenderControls.setHighlightedWidth(controls.getHighlightedWS().getX2());
 				RenderControls.setHighlightedHeight(controls.getHighlightedWS().getY2());
@@ -492,13 +488,13 @@ public class Window extends JPanel implements KeyListener, MouseListener, MouseW
 				controls.getHighlightedWS()
 						.setY2((short) (controls.getHighlightedWS().getY2() + (dy * RenderControls.getZoomLevel())));
 				DataLists.getVertices().get(controls.getHighlightedIndex() * 2)
-						.setX((short) controls.getHighlightedWS().getX1());
+						.setX(controls.getHighlightedWS().getX1());
 				DataLists.getVertices().get(controls.getHighlightedIndex() * 2)
-						.setY((short) controls.getHighlightedWS().getY1());
+						.setY(controls.getHighlightedWS().getY1());
 				DataLists.getVertices().get((controls.getHighlightedIndex() * 2) + 1)
-						.setX((short) controls.getHighlightedWS().getX2());
+						.setX(controls.getHighlightedWS().getX2());
 				DataLists.getVertices().get((controls.getHighlightedIndex() * 2) + 1)
-						.setY((short) controls.getHighlightedWS().getY2());
+						.setY(controls.getHighlightedWS().getY2());
 				DataLists.getWalls().set(controls.getHighlightedIndex(), controls.getHighlightedWS());
 				RenderControls.setHighlightedWidth(controls.getHighlightedWS().getX2());
 				RenderControls.setHighlightedHeight(controls.getHighlightedWS().getY2());

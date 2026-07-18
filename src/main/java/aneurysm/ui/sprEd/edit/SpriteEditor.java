@@ -27,24 +27,24 @@ import aneurysm.ui.Window;
 import aneurysm.ui.sprEd.offsets.SpriteDimension;
 import aneurysm.ui.sprEd.ui.SpriteCanvas;
 
-public class Editor extends JPanel {
+public class SpriteEditor extends JPanel {
 
 	private JButton next;
 	private JButton prev;
 	private static final long serialVersionUID = -8635012649987300945L;
 	private JLabel coords;
 	private int selectedImageIndex;
-	private Window host;
+	private final Window host;
 	private int colorIndex = 0;
-	private JLabel[] colors = new JLabel[16];
-	private Color[] pal = new Color[16];
+	private final JLabel[] colors = new JLabel[16];
+	private Color[] pal;
 	private SpriteCanvas imagePanel;
 	private ArrayList<SpriteDimension> dims = new ArrayList<>();
 	private int[] offsets;
-	private String fileLocation = FileReader.getConfig().getLocation();
 	private Byte[][] currentImage;
 	private boolean changesMade;
-	private boolean isCartOrCd = DataLists.isCdOrCart();
+	private boolean moveDir;
+
 
 	public void setCurrentImage(Byte[][] in) {
 		currentImage = in;
@@ -54,75 +54,10 @@ public class Editor extends JPanel {
 		changesMade = true;
 	}
 
-	private Byte[][] readRomSprite(int offset, int w, int h) {
-		Byte[][] out = new Byte[w][h];
-		try {
-			RandomAccessFile rin = new RandomAccessFile(fileLocation, "rw");
-			rin.seek(offset);
-			for (int j = 0; j < w; j++) {
-				for (int i = 0; i < h; i++) {
-					out[j][i] = (rin.readByte());
-				}
-			}
-			rin.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return out;
-	}
-
-	private Byte[][] readCDSprite(int offset, int w, int h) {
-		Byte[][] out = new Byte[w][h];
-		try {
-			RandomAccessFile rin = new RandomAccessFile(fileLocation, "rw");
-			rin.seek(offset);
-			for (int j = 0; j < w; j += 2) {
-				for (int i = 0; i < h; i++) {
-					byte read = (rin.readByte());
-					byte higher;
-					byte lower;
-
-					if (j == w - 1)
-						out[j][i] = (byte) ((read & 0x000000F0) / 16);
-					else {
-						if (((read & 0xF0)) != (read & 0x0F) * 0x10) {
-
-							if ((read & 0xF0) > ((read & 0x0F) * 16)) {
-								lower = (byte) ((read << 4) + (read & 0x0F));
-								higher = (byte) ((read & 0xF0) + ((read & 0xF0) / 0x10));
-
-								out[j][i] = (byte) ((higher & 0x000000F0) / 16);
-								out[j + 1][i] = (byte) ((lower & 0x000000F0) / 16);
-							} else {
-								higher = (byte) ((read << 4) + (read & 0x0F));
-								lower = (byte) ((read & 0xF0) + ((read & 0xF0) / 0x10));
-
-								out[j + 1][i] = (byte) ((higher & 0x000000F0) / 16);
-								out[j][i] = (byte) ((lower & 0x000000F0) / 16);
-							}
-
-						} else {
-							out[j][i] = (byte) ((read & 0x000000F0) / 16);
-							out[j + 1][i] = (byte) ((read & 0x000000F0) / 16);
-						}
-
-					}
-				}
-			}
-			rin.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return out;
-	}
-
-	private Byte[][] readSprite(boolean cartOrCd, int i, boolean forward) {
-		Byte[][] out = null;
-		if (!cartOrCd)
-			out = readRomSprite(CartOffsets.getSpriteOffsets()[i], dims.get(i).getW(), dims.get(i).getH());
+	private Byte[][] readSprite(int i, boolean forward) {
+		Byte[][] out;
+		if (!DataLists.isCdOrCart())
+			out = Window.getReader().readSprite(CartOffsets.getSpriteOffsets()[i], dims.get(i).getW(), dims.get(i).getH());
 		else {
 			while (offsets[i] == 0) {
 				if (forward) {
@@ -133,72 +68,17 @@ public class Editor extends JPanel {
 					selectedImageIndex--;
 				}
 			}
-			out = readCDSprite(CDOffsets.getSpriteOffsets()[i], dims.get(i).getW(), dims.get(i).getH());
+			out = Window.getReader().readCDSprite(CDOffsets.getSpriteOffsets()[i], dims.get(i).getW(), dims.get(i).getH(), Window.getReader().getConfig().getLocation());
 		}
 		return out;
 	}
 
-	private void writeROMSprite() {
-		try {
-			RandomAccessFile rin = new RandomAccessFile(fileLocation, "rw");
-			rin.seek(offsets[selectedImageIndex]);
-			for (int i = 0; i < currentImage.length; i++) {
-				for (int j = 0; j < currentImage[0].length; j++) {
-					rin.writeByte(currentImage[i][j]);
-				}
-			}
-			rin.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	private void writeSprite() {
-		if (!isCartOrCd) {
-			writeROMSprite();
+		if (!DataLists.isCdOrCart()) {
+			Window.getReader().writeROMSprite(offsets[selectedImageIndex], currentImage);
 		} else {
-			writeCDSprite();
-		}
-	}
-
-	private Byte[][] compressImage(Byte[][] image) {
-		Byte[][] out;
-		if (image.length % 2 == 1)
-			out = new Byte[image.length / 2 + 1][image[0].length];
-		else
-			out = new Byte[image.length / 2][image[0].length];
-
-		int currentRow = 0;
-		for (int j = 0; j < image.length; j += 2) {
-			for (int i = 0; i < image[0].length; i++) {
-				if (j == image.length - 1)
-					out[currentRow][i] = (byte) (image[j][i] & 0x0000000F);
-				else {
-					out[currentRow][i] = (byte) (((image[j][i] & 0x0000000F) * 16) + (image[j + 1][i] & 0x0000000F));
-				}
-			}
-			currentRow++;
-		}
-
-		return out;
-	}
-
-	private void writeCDSprite() {
-		Byte[][] toWrite = compressImage(currentImage);
-		try {
-			RandomAccessFile rin = new RandomAccessFile(fileLocation, "rw");
-			rin.seek(offsets[selectedImageIndex]);
-
-			for (int i = 0; i < toWrite.length; i++) {
-				for (int j = 0; j < toWrite[0].length; j++) {
-					rin.writeByte(toWrite[i][j]);
-				}
-			}
-			rin.close();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			Window.getReader().writeCDSprite(offsets[selectedImageIndex], currentImage);
 		}
 	}
 
@@ -215,8 +95,8 @@ public class Editor extends JPanel {
 		return result;
 	}
 
-	public void getIndexes(boolean cartOrCd) {
-		if (!cartOrCd) {
+	public void getIndexes() {
+		if (!DataLists.isCdOrCart()) {
 			dims = CartOffsets.getSpriteDimensions();
 			offsets = CartOffsets.getSpriteOffsets();
 		} else {
@@ -226,8 +106,8 @@ public class Editor extends JPanel {
 		}
 	}
 
-	public Editor(Window host) {
-		pal = DataLists.getObjectPal();
+	public SpriteEditor(Window host) {
+		pal = DataLists.getLevelPal();
 		this.setLayout(null);
 		this.host = host;
 		setupComponents();
@@ -269,10 +149,10 @@ public class Editor extends JPanel {
 		prev.setLocation(580, 64);
 		this.add(prev);
 		this.add(next);
-		for (int i = 0; i < pal.length; i++) {
+		for (int i = 0; i < 16; i++) {
 			colors[i] = new JLabel("0" + Integer.toHexString(i));
 			this.add(colors[i]);
-			colors[i].setBackground(pal[i]);
+			colors[i].setBackground(pal[i+32]);
 			colors[i].setOpaque(true);
 			colors[i].setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 			colors[i].setSize(new Dimension(24, 24));
@@ -288,7 +168,7 @@ public class Editor extends JPanel {
 			});
 		}
 
-		getIndexes(isCartOrCd);
+		getIndexes();
 		selectedImageIndex = 0;
 
 		Thread main = new Thread(new Runner());
@@ -301,19 +181,13 @@ public class Editor extends JPanel {
 		updateEditingImage(selectedImageIndex);
 	}
 
-	private boolean moveDir;
-
 	private void updateEditingImage(int num) {
 		if (num > offsets.length - 1)
 			num = 0;
 		if (num < 0)
 			num = offsets.length - 1;
 		selectedImageIndex = num;
-		imagePanel.setImage(readSprite(isCartOrCd, num, moveDir));
-	}
-
-	public void setCartOrCd(boolean c) {
-		this.isCartOrCd = c;
+		imagePanel.setImage(readSprite(num, moveDir));
 	}
 
 	public void paintComponent(Graphics g) {

@@ -1,7 +1,8 @@
 package aneurysm.ui.sprEd.offsets;
 
 public class SpriteDimension {
-	private int w, h;
+	private final int w;
+    private final int h;
 
 	public int getW() {
 		return w;

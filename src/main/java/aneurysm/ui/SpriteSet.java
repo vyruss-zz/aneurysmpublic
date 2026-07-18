@@ -4,7 +4,9 @@ public class SpriteSet {
 
 	private Integer objectNumber;
 	private String stringName;
-	private int offset, width, height;
+	private final int offset;
+    private final int width;
+    private final int height;
 
 	public int getOffset() {
 		return offset;

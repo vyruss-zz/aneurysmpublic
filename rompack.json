@@ -1,0 +1,545 @@
+{
+  "packResources": {
+    "hud": {
+      "gfx/hud/single.dat": {
+        "offset": "102bd2",
+        "length": 2624
+      },
+      "gfx/hud/single.map": {
+        "offset": "103612",
+        "length": 896
+      },
+      "gfx/hud/font.dat": {
+        "offset": "101822",
+        "length": 4064
+      },
+      "gfx/hud/font.map": {
+        "offset": "102802",
+        "length": 488
+      },
+      "gfx/hud/multi.dat": {
+        "offset": "103d12",
+        "length": 1696
+      },
+      "gfx/hud/multi.map": {
+        "offset": "1043b2",
+        "length": 896
+      },
+      "gfx/hud/mapback.dat": {
+        "offset": "104ab2",
+        "length": 960
+      },
+      "gfx/hud/hudinfo.dat": {
+        "offset": "104e72",
+        "length": 7520
+      },
+      "gfx/hud/wpnflash.dat": {
+        "offset": "106bd2",
+        "length": 85504
+      },
+      "gfx/hud/plasma.dat": {
+        "offset": "51a8",
+        "length": 1024
+      }
+    },
+    "intro": {
+      "gfx/intro/acclaim.dat": {
+        "offset": "3695a",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/acclaim.map": {
+        "offset": "36e04",
+        "length": 896
+      },
+      "gfx/intro/acclaim.pal": {
+        "offset": "37504",
+        "length": 32
+      },
+      "gfx/intro/segatm.dat": {
+        "offset": "37532",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/segatm.map": {
+        "offset": "37b9a",
+        "length": 896
+      },
+      "gfx/intro/segatm.pal": {
+        "offset": "3829a",
+        "length": 32
+      },
+      "gfx/intro/sega.dat": {
+        "offset": "382c8",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/sega.map": {
+        "offset": "38924",
+        "length": 896
+      },
+      "gfx/intro/sega.pal": {
+        "offset": "39024",
+        "length": 32
+      },
+      "gfx/intro/domark.dat": {
+        "offset": "39052",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/domark.map": {
+        "offset": "3956e",
+        "length": 896
+      },
+      "gfx/intro/domark.pal": {
+        "offset": "39c6e",
+        "length": 32
+      },
+      "gfx/intro/titlegfx.dat": {
+        "offset": "39c9c",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/titlegfx.map": {
+        "offset": "3d734",
+        "length": 896
+      },
+      "gfx/intro/titlegfx.pal": {
+        "offset": "3de34",
+        "length": 32
+      },
+      "gfx/intro/bshottxt.dat": {
+        "offset": "3de62",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/bshottxt.map": {
+        "offset": "3e8ac",
+        "length": 896
+      },
+      "gfx/intro/bshottxt.pal": {
+        "offset": "3efac",
+        "length": 32
+      },
+      "gfx/intro/bfrnztxt.dat": {
+        "offset": "3efda",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/bfrnztxt.map": {
+        "offset": "3fa94",
+        "length": 896
+      },
+      "gfx/intro/bfrnztxt.pal": {
+        "offset": "40194",
+        "length": 32
+      },
+      "gfx/intro/screen.dat": {
+        "offset": "401c2",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/screen.map": {
+        "offset": "42a38",
+        "length": 896
+      },
+      "gfx/intro/screen.pal": {
+        "offset": "43138",
+        "length": 32
+      },
+      "gfx/intro/marines.dat": {
+        "offset": "43166",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/marines.map": {
+        "offset": "477b2",
+        "length": 896
+      },
+      "gfx/intro/marines.pal": {
+        "offset": "47eb2",
+        "length": 32
+      },
+      "gfx/intro/surgery.dat": {
+        "offset": "47ee0",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/surgery.map": {
+        "offset": "4bd0c",
+        "length": 896
+      },
+      "gfx/intro/surgery.pal": {
+        "offset": "4c40c",
+        "length": 32
+      },
+      "gfx/intro/robots.dat": {
+        "offset": "4c43a",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/robots.map": {
+        "offset": "4f3f2",
+        "length": 896
+      },
+      "gfx/intro/robots.pal": {
+        "offset": "4faf2",
+        "length": 32
+      },
+      "gfx/intro/base.dat": {
+        "offset": "4fb20",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/base.map": {
+        "offset": "51602",
+        "length": 896
+      },
+      "gfx/intro/base.pal": {
+        "offset": "51d02",
+        "length": 32
+      },
+      "gfx/intro/fleet.dat": {
+        "offset": "51d30",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/fleet.map": {
+        "offset": "545d8",
+        "length": 896
+      },
+      "gfx/intro/fleet.pal": {
+        "offset": "54cd8",
+        "length": 32
+      },
+      "gfx/intro/node.dat": {
+        "offset": "54d06",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/node.map": {
+        "offset": "58746",
+        "length": 896
+      },
+      "gfx/intro/node.pal": {
+        "offset": "58e46",
+        "length": 32
+      },
+      "gfx/intro/tow.dat": {
+        "offset": "58e74",
+        "decompress": true,
+        "length": 0
+      },
+      "gfx/intro/tow.map": {
+        "offset": "5ac4e",
+        "length": 896
+      },
+      "gfx/intro/tow.pal": {
+        "offset": "5b43e",
+        "length": 32
+      }
+    },
+    "sprites": {
+      "gfx/sprites.dat": {
+        "offset": "11b9d6",
+        "length": 934272,
+        "spriteoffsets": [
+          "0011ba50",
+          "0011baec",
+          "0011bc9c",
+          "0011bcfa",
+          "0011be70",
+          "0011beae",
+          "0011c088",
+          "0011c262",
+          "0011c2c0",
+          "0011c486",
+          "0011c5a2",
+          "0011c718",
+          "0011c806",
+          "0011c98c",
+          "0011cb52",
+          "0011cbb8",
+          "0011cccc",
+          "0011cf5e",
+          "0011d4c2",
+          "0011d5be",
+          "0011da10",
+          "0011deec",
+          "0011e33c",
+          "0011e756",
+          "0011eb5e",
+          "0011ef78",
+          "0011f7c4",
+          "0011fed0",
+          "00120eb4",
+          "001216a6",
+          "00121cc8",
+          "001228aa",
+          "001243e4",
+          "00125a6a",
+          "0012659e",
+          "001270ee",
+          "00127e60",
+          "00128acc",
+          "0012959a",
+          "0012a084",
+          "0012adf6",
+          "0012ba62",
+          "0012c73e",
+          "0012d4ba",
+          "0012e2fe",
+          "0012f218",
+          "001302aa",
+          "00131286",
+          "001321aa",
+          "00132eb8",
+          "001334d4",
+          "00133b00",
+          "00136392",
+          "00138c1e",
+          "0013b4aa",
+          "0013dd36",
+          "001405c2",
+          "0014340c",
+          "001438be",
+          "00143d70",
+          "00144222",
+          "001445b2",
+          "00144aca",
+          "0014518e",
+          "001459a4",
+          "0014618a",
+          "00147016",
+          "00147f46",
+          "00148ef2",
+          "00149db0",
+          "0014ac30",
+          "0014ba94",
+          "0014c914",
+          "0014d70c",
+          "0014e65a",
+          "0014f5a8",
+          "0015034a",
+          "00151406",
+          "001524c2",
+          "0015357e",
+          "00154b12",
+          "00155f88",
+          "00156bd0",
+          "001575ec",
+          "00157dd6",
+          "00159ef0",
+          "0015c272",
+          "0015e5d6",
+          "00160d50",
+          "00162984",
+          "00163a70",
+          "00165dd4",
+          "001680b0",
+          "0016a8b8",
+          "0016d94c",
+          "0016fc9c",
+          "00171a72",
+          "00174064",
+          "0017654a",
+          "00178a8a",
+          "0017b186",
+          "0017d778",
+          "0017fbac",
+          "001820ec",
+          "001847e8",
+          "001853ee",
+          "00185f5e",
+          "00186b5e",
+          "00187920",
+          "001886f2",
+          "0018932a",
+          "00189d38",
+          "0018a4fe",
+          "0018ac18",
+          "0018b1b8",
+          "0018b792",
+          "0018c34e",
+          "0018cf2c",
+          "0018db4e",
+          "0018e786",
+          "0018f342",
+          "0018ff20",
+          "00190b42",
+          "0019177a",
+          "00195e54",
+          "00199f10",
+          "0019e342",
+          "001a1c84",
+          "001a562a",
+          "001a9416",
+          "001ac75a",
+          "001afbe8",
+          "001b3fca",
+          "001b7be0",
+          "001bb1ec",
+          "001bd65a",
+          "001bf1c6",
+          "001c0b9a",
+          "001c2970",
+          "001c3f62",
+          "001c4f58",
+          "001c6520",
+          "001c7b8c",
+          "001c8b3c",
+          "001c98d2",
+          "001ca40a",
+          "001cb17c",
+          "001cbc4a",
+          "001cbc62",
+          "001cbedc",
+          "001cc9fc",
+          "001cd55a",
+          "001ce46e",
+          "001cf866",
+          "001d10d2",
+          "001d2bb2",
+          "001d3858",
+          "001d437a",
+          "001d4f14",
+          "001d5b92",
+          "001d67a6",
+          "001d72fc",
+          "001d7e96",
+          "001d8b14",
+          "001d9728",
+          "001da38c",
+          "001db31a",
+          "001dc046",
+          "001dce6e",
+          "001ddc5e",
+          "001de76e",
+          "001df2f6",
+          "001e00ea",
+          "001e1042",
+          "001e1bdc",
+          "001e1be8",
+          "001e26f4",
+          "001e32d2",
+          "001e3e36",
+          "001e49d0",
+          "001e54dc",
+          "001e6008",
+          "001e6b4c",
+          "001e76e6",
+          "001e8802",
+          "001e9726",
+          "001ea8d2",
+          "001ebc32",
+          "001ecbe2",
+          "001edbbe",
+          "001eedc2",
+          "001f03c8",
+          "001f0e7c",
+          "001f1988",
+          "001f245c",
+          "001f2e9a",
+          "001f37d4",
+          "001f41d8",
+          "001f4cca",
+          "001f5856",
+          "001f5862",
+          "001f586e",
+          "001f587a",
+          "001f5886",
+          "001f5892",
+          "001f589e",
+          "001f58aa",
+          "001f58b6",
+          "001f6c94",
+          "001f8050",
+          "001f9444",
+          "001fa770",
+          "001fc24a",
+          "001fcab8",
+          "001fdf80",
+          "001fec6a",
+          "001ffb3e",
+          "001ffb4a"
+        ],
+        "thingoffsets": [
+          "0011cbc4",
+          "0011cbca",
+          "0011cbd0",
+          "0011cbd6",
+          "0011d5ca",
+          "0011d5d0",
+          "0011d5d6",
+          "0011e348",
+          "0011e34e",
+          "0011e354",
+          "0011ef72",
+          "0011f7be",
+          "0011feca",
+          "00120eae",
+          "001216a0",
+          "00121cc2",
+          "001228a4",
+          "001243de",
+          "00124df2",
+          "00124df8",
+          "00124dfe",
+          "00124e04",
+          "00133b0c",
+          "00146196",
+          "0014619c",
+          "00157de2",
+          "00165de0",
+          "00165de6",
+          "001847f4",
+          "00191786",
+          "001c98de",
+          "001c98e4",
+          "001c98ea",
+          "001cbc56",
+          "001cbc5c",
+          "001d2bbe"
+        ]
+      }
+    },
+      "maps": {
+        "numlevels": 15,
+        "arenastart": 12,
+        "headeroffset": "10c6e",
+        "texturebaseoffset": "92822",
+        "thingbaseoffset": "11b9d6"
+      },
+      "textures": {
+        "offset": "92822",
+        "length": 454656
+      },
+      "actors": {
+        "actordefs": {
+          "nodedefs": "62fe",
+          "numnodes": 4,
+          "actordefs": "63be",
+          "numactors": 19,
+          "projectiledefs": "10aba",
+          "numprojectiles": 21,
+          "spritebase": "11b9d6"
+        },
+        "spritetables": {
+          "actorspritetable": "680c",
+          "actorspritetablelen": 904,
+          "playerspritetable": "d6d2",
+          "playerspritetablelen": 160
+        }
+      },
+      "sound": {
+        "dbank": "6037e",
+        "dbanklen": 64450,
+        "pbank": "5cee4",
+        "pbanklen": 4827,
+        "sbank": "5e1bf",
+        "sbanklen": 8639,
+        "gems": "5b65e",
+        "gemslen": 6278
+      }
+    }
+  }

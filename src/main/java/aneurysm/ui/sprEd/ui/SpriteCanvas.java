@@ -11,15 +11,16 @@ import java.awt.image.BufferedImage;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import aneurysm.ui.sprEd.edit.Editor;
+import aneurysm.ui.sprEd.edit.SpriteEditor;
+import aneurysm.ui.texEd.edit.TextureEditor;
 
 
 public class SpriteCanvas extends JPanel implements MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
-	private Editor host;
+	private final SpriteEditor host;
 	private Byte[][] currentSprite;
-	private byte spriteScale = 4;
+	private final byte spriteScale = 4;
 	private int selectedColorIndex;
 	private Color[] pal;
 
@@ -42,7 +43,7 @@ public class SpriteCanvas extends JPanel implements MouseListener, MouseMotionLi
 		Graphics g = im.getGraphics();
 		for (int i = 0; i < im.getWidth() / spriteScale; i++) {
 			for (int j = 0; j < im.getHeight() / spriteScale; j++) {
-				g.setColor(pal[currentSprite[i][j] & 0x0000000F]);
+				g.setColor(pal[(currentSprite[i][j] & 0x0000000F)+32]);
 				g.fillRect(i * spriteScale, j * spriteScale, spriteScale, spriteScale);
 			}
 		}
@@ -116,9 +117,9 @@ public class SpriteCanvas extends JPanel implements MouseListener, MouseMotionLi
 		selectedColorIndex = col;
 	}
 
-	private JLabel c;
+	private final JLabel c;
 
-	public SpriteCanvas(Editor host, JLabel c) {
+	public SpriteCanvas(SpriteEditor host, JLabel c) {
 
 		this.c = c;
 		this.host = host;

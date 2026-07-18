@@ -6,7 +6,7 @@ import aneurysm.ui.sprEd.offsets.SpriteDimension;
 
 public class CDOffsets {
 
-	private static ArrayList<SpriteDimension> dims = new ArrayList<SpriteDimension>();
+	private static final ArrayList<SpriteDimension> dims = new ArrayList<SpriteDimension>();
 	
 	static {
 		dims.add(new SpriteDimension(0x1e, 0x08)); // light 0c (0)
@@ -193,7 +193,7 @@ public class CDOffsets {
 		dims.add(new SpriteDimension(0x17, 0x1b)); // mine 2
 	}
 	
-	private static int[] offsets = new int[0x288/4];
+	private static final int[] offsets = new int[0x288/4];
 	public static int[] getSpriteOffsets() {
 		return offsets;
 	}

@@ -21,7 +21,7 @@ public class Vertex {
 	public void setY(short y) {
 		this.y = y;
 	}
-	
+
 	public Vertex(short x, short y) {
 		super();
 		this.x = x;

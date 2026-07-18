@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 public class CapturePane extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private JLabel label;
+	private final JLabel label;
 	private MouseListener mListen;
 	private KeyListener kListen;
 	private JPanel host;

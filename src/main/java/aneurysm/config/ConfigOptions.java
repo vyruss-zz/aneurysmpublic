@@ -3,12 +3,17 @@ package aneurysm.config;
 import aneurysm.render.RenderControls;
 
 public class ConfigOptions {
-	private String location="";
-	private int[] levelGrid = new int[15];
-	private int[] levelZoom = {16,16,16,16,16,16,16,16,16,16,16,16,16,16,16};
-	private boolean[] levelRot = new boolean[15];
+	private String location="notset";
+	private String shellBinLocation="notset";
+	private String mainOSBinLocation="notset";
+	private String slidesBinLocation="notset";
+	private final int[] levelGrid = new int[15];
+	private final int[] levelZoom = {16,16,16,16,16,16,16,16,16,16,16,16,16,16,16};
+	private final boolean[] levelRot = new boolean[15];
 	private boolean noCD = false;
-	
+	private final int[] levelMode = new int[15];
+	private final int mapSize = 15;
+
 	public boolean isNoCD() {
 		return noCD;
 	}
@@ -17,23 +22,46 @@ public class ConfigOptions {
 		this.noCD = noCD;
 	}
 
-	private int[] levelMode = new int[15];
-	private int getMapSize = 15;
-	
-	public int getGetMapSize() {
-		return getMapSize;
+	public String getMainOSBinLocation() {
+		return mainOSBinLocation;
 	}
 
-	public void saveMapConfigs() {
-		levelZoom[currentLevel] = RenderControls.getZoomLevel();
-		levelGrid[currentLevel] = RenderControls.getGridIntensity();
-		levelRot[currentLevel] = RenderControls.isRot90();
-		int mode=0;
-		if(RenderControls.isVertsMode()) mode=0;
-		if(RenderControls.isLinesMode()) mode=1;
-		if(RenderControls.isThingsMode()) mode=2;
-		levelMode[currentLevel] = mode;
+	public void setMainOSBinLocation(String mainOSBinLocation) {
+		this.mainOSBinLocation = mainOSBinLocation;
 	}
+
+	public String getShellBinLocation() {
+		return shellBinLocation;
+	}
+
+	public void setShellBinLocation(String shellBinLocation) {
+		this.shellBinLocation = shellBinLocation;
+	}
+
+    public int getMapSize() {
+        return mapSize;
+    }
+
+    public void saveMapConfigs() {
+        if (currentLevel < 0 || currentLevel >= levelZoom.length) {
+            throw new IndexOutOfBoundsException("Invalid currentLevel: " + currentLevel);
+        }
+        
+        levelZoom[currentLevel] = RenderControls.getZoomLevel();
+        levelGrid[currentLevel] = RenderControls.getGridIntensity();
+        levelRot[currentLevel] = RenderControls.isRot90();
+        
+        int mode = 0;
+        if (RenderControls.isVertsMode()) {
+            mode = 0;
+        } else if (RenderControls.isLinesMode()) {
+            mode = 1;
+        } else if (RenderControls.isThingsMode()) {
+            mode = 2;
+        }
+        
+        levelMode[currentLevel] = mode;
+    }
 	
 	public int getLevelMode(int index) {
 		return levelMode[index];
@@ -84,4 +112,12 @@ public class ConfigOptions {
 	public void setLocation(String loc) {
 		location = loc;
 	}
+
+    public String getSlidesBinLocation() {
+        return slidesBinLocation;
+    }
+
+    public void setSlidesBinLocation(String slidesBinLocation) {
+        this.slidesBinLocation = slidesBinLocation;
+    }
 }

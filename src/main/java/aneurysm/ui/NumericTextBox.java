@@ -8,6 +8,14 @@ public class NumericTextBox extends JTextField {
 
 	private static final long serialVersionUID = 1L;
 
+	public NumericTextBox() {
+		super("");
+	}
+
+	public NumericTextBox(String text) {
+		super(text);
+	}
+
 	@Override
 	public void processKeyEvent(KeyEvent ev) {
 		if (Character.isDigit(ev.getKeyChar()) || ev.getKeyChar() == 'a' || ev.getKeyChar() == 'b'
@@ -19,8 +27,7 @@ public class NumericTextBox extends JTextField {
 		}
 
 		ev.consume();
-		return;
-	}
+    }
 
 	public Byte getByte() {
 		Byte result = null;

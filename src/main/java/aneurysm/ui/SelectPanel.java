@@ -25,22 +25,27 @@ import aneurysm.render.RenderControls;
 public class SelectPanel extends JPanel implements ActionListener, ItemListener, KeyListener, FocusListener {
 
 	private static final long serialVersionUID = 1L;
-	private JLabel currentImage;
+	private final JLabel currentImage;
 
 	private JComboBox<String> itemBox;
-	private JComboBox<String> lineType;
-	private JCheckBox flipTexture;
-	private NumericTextBox lineTag;
-	private NumericTextBox NSLow;
-	private NumericTextBox NSHigh;
-	private NumericTextBox WELow;
-	private NumericTextBox WEHigh;
-	private NumericTextBox texLength;
-	private JLabel lineTagLabel, NSLowLabel, NSHighLabel, WELowLabel, WEHighLabel, texLengthLabel;
-	private JLabel itemInfo;
-	private Window host;
+	private final JComboBox<String> lineType;
+	private final JCheckBox flipTexture;
+	private final NumericTextBox lineTag;
+	private final NumericTextBox NSLow;
+	private final NumericTextBox NSHigh;
+	private final NumericTextBox WELow;
+	private final NumericTextBox WEHigh;
+	private final NumericTextBox texLength;
+	private final JLabel lineTagLabel;
+    private final JLabel NSLowLabel;
+    private final JLabel NSHighLabel;
+    private final JLabel WELowLabel;
+    private final JLabel WEHighLabel;
+    private final JLabel texLengthLabel;
+	private final JLabel itemInfo;
+	private final Window host;
 
-	private String[] doorTypes = { "Wall", "Door", "Door Open and Close Others", "Door Yellow Keyed", "Door Red Keyed",
+	private final String[] doorTypes = { "Wall", "Door", "Door Open and Close Others", "Door Yellow Keyed", "Door Red Keyed",
 			"Door White Keyed" };
 
 	public void refreshItemBox() {
@@ -69,10 +74,7 @@ public class SelectPanel extends JPanel implements ActionListener, ItemListener,
 		lineTag.setText(Integer.toHexString(tag & 0x000000FF));
 
 		texLength.setText(Integer.toHexString(length & 0x000000FF));
-		if ((id & 0xFF000000) != 0)
-			flipTexture.setSelected(true);
-		else
-			flipTexture.setSelected(false);
+        flipTexture.setSelected((id & 0xFF000000) != 0);
 	}
 
 	public JComboBox getItemBox() {
@@ -352,7 +354,7 @@ public class SelectPanel extends JPanel implements ActionListener, ItemListener,
 					host.getControls().getSelectedWS().setDoorNSLow((byte) val);
 			}
 			if (arg0.getSource() == texLength) {
-				host.getControls().getSelectedWS().setTextureScale((short) val);
+				host.getControls().getSelectedWS().setTextureScale(val);
 			}
 			if (arg0.getSource() == lineTag) {
 				host.getControls().getSelectedWS().setDoorNumber((byte) val);

@@ -16,6 +16,8 @@ import aneurysm.ui.DataLists;
 import aneurysm.ui.ImageStringRenderer;
 import aneurysm.ui.Window;
 
+
+
 public class EditorControls {
 
 	private String selectedInfo;
@@ -25,6 +27,13 @@ public class EditorControls {
 	private boolean movingThing = false;
 	private boolean itemSelected = false;
 	private boolean mapChanged = false;
+	private final Window host;
+
+	// Constants for highlight dimensions
+	private static final int HIGHLIGHT_WIDTH = 16;
+	private static final int HIGHLIGHT_HEIGHT = 16;
+	private static final int ITEM_HALF_SIZE = 32;
+	private static final int WALL_HALF_SIZE = 16;
 	private int currentStoredXPos;
 	private int currentStoredYPos;
 	private MapObjectStructure highlightedMOS = null;
@@ -52,50 +61,16 @@ public class EditorControls {
 		this.currentStoredXPos = currentStoredXPos;
 	}
 
-	public String getHighlightedInfo() {
-		return highlightedInfo;
-	}
-
-	public void setHighlightedInfo(String highlightedInfo) {
-		this.highlightedInfo = highlightedInfo;
-	}
-
 	public MapObjectStructure getSelectedMOS() {
 		return selectedMOS;
-	}
-
-	public void setSelectedMOS(MapObjectStructure selectedMOS) {
-		this.selectedMOS = selectedMOS;
 	}
 
 	public WallStructure getSelectedWS() {
 		return selectedWS;
 	}
 
-	public void setSelectedWS(WallStructure selectedWS) {
-		this.selectedWS = selectedWS;
-	}
-
-	public Vertex getSelectedVert() {
-		return selectedVert;
-	}
-
-	public void setSelectedVert(Vertex selectedVert) {
-		this.selectedVert = selectedVert;
-	}
-
 	public int getHighlightedIndex() {
 		return highlightedIndex;
-	}
-
-	public void setHighlightedIndex(int highlightedIndex) {
-		this.highlightedIndex = highlightedIndex;
-	}
-
-	private Window host;
-
-	public String getSelectedInfo() {
-		return selectedInfo;
 	}
 
 	public void setSelectedInfo(String selectedInfo) {
@@ -106,9 +81,6 @@ public class EditorControls {
 		return itemHighlighted;
 	}
 
-	public void setItemHighlighted(boolean itemHighlighted) {
-		this.itemHighlighted = itemHighlighted;
-	}
 
 	public boolean isMovingThing() {
 		return movingThing;
@@ -116,18 +88,6 @@ public class EditorControls {
 
 	public void setMovingThing(boolean movingThing) {
 		this.movingThing = movingThing;
-	}
-
-	public boolean isItemSelected() {
-		return itemSelected;
-	}
-
-	public void setItemSelected(boolean itemSelected) {
-		this.itemSelected = itemSelected;
-	}
-
-	public boolean isMapChanged() {
-		return mapChanged;
 	}
 
 	public void setMapChanged(boolean mapChanged) {
@@ -138,46 +98,21 @@ public class EditorControls {
 		return highlightedMOS;
 	}
 
-	public void setHighlightedMOS(MapObjectStructure highlightedMOS) {
-		this.highlightedMOS = highlightedMOS;
-	}
-
 	public WallStructure getHighlightedWS() {
 		return highlightedWS;
-	}
-
-	public void setHighlightedWS(WallStructure highlightedWS) {
-		this.highlightedWS = highlightedWS;
 	}
 
 	public Vertex getHighlightedVert() {
 		return highlightedVert;
 	}
-
-	public void setHighlightedVert(Vertex highlightedVert) {
-		this.highlightedVert = highlightedVert;
-	}
-
-	public int getSelectedIndex() {
-		return selectedIndex;
-	}
-
-	public void setSelectedIndex(int selectedIndex) {
-		this.selectedIndex = selectedIndex;
-	}
-
-	public EditorControls getInstance() {
-		return this;
-	}
-
 	public EditorControls(Window host) {
 		this.host = host;
 	}
 
 	public static void prepLinesAndVerts() {
-		if (DataLists.getLines().size() > 0)
+		if (!DataLists.getLines().isEmpty())
 			DataLists.getLines().clear();
-		if (DataLists.getVertices().size() > 0)
+		if (!DataLists.getVertices().isEmpty())
 			DataLists.getVertices().clear();
 		Vertex v1;
 		Vertex v2;
@@ -197,10 +132,10 @@ public class EditorControls {
 	}
 
 	public void setMapConfig(ComponentLauncher launcher) {
-		RenderControls.setZoomLevel(FileReader.getConfig().getLevelZoom(FileReader.getConfig().getCurrentLevel()));
-		RenderControls.setGridIntensity(FileReader.getConfig().getLevelGrid(FileReader.getConfig().getCurrentLevel()));
-		RenderControls.setRot90(FileReader.getConfig().getLevelRot(FileReader.getConfig().getCurrentLevel()));
-		switch (FileReader.getConfig().getLevelMode(FileReader.getConfig().getCurrentLevel())) {
+		RenderControls.setZoomLevel(Window.getReader().getConfig().getLevelZoom(Window.getReader().getConfig().getCurrentLevel()));
+		RenderControls.setGridIntensity(Window.getReader().getConfig().getLevelGrid(Window.getReader().getConfig().getCurrentLevel()));
+		RenderControls.setRot90(Window.getReader().getConfig().getLevelRot(Window.getReader().getConfig().getCurrentLevel()));
+		switch (Window.getReader().getConfig().getLevelMode(Window.getReader().getConfig().getCurrentLevel())) {
 		case 0:
 			RenderControls.setVertsMode(true);
 			break;
@@ -218,7 +153,7 @@ public class EditorControls {
 	public void writeToROM(Window window) {
 		int result = JOptionPane.showConfirmDialog(
 				window, ("Do you wish to write your changes to the ROM located at "
-						+ FileReader.getConfig().getLocation() + "?\n\nWARNING: YOU MAY CORRUPT YOUR ROM."),
+						+ Window.getReader().getConfig().getLocation() + "?\n\nWARNING: YOU MAY CORRUPT YOUR ROM."),
 				"Write to ROM", JOptionPane.YES_NO_OPTION);
 		if (result == JOptionPane.YES_OPTION) {
 			DataLists.setChangesMade(true);
@@ -260,35 +195,19 @@ public class EditorControls {
 		return Math.abs(l);
 	}
 
-//	public void saveFile(Window window) {
-//		JFileChooser fileChooser = new JFileChooser();
-//		fileChooser.setDialogTitle("Export Level Data");
-//		int option = fileChooser.showSaveDialog(window);
-//		if (option == JFileChooser.APPROVE_OPTION) {
-//			try {
-//				Window.getReader().exportToFile(DataLists.getWalls(), DataLists.getObjects(),
-//						fileChooser.getSelectedFile().toString());
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
 
 	public void updateMap(ComponentLauncher launcher) {
-		/*
-		 * if(mapChanged) { confirmChangemap(); }
-		 */
 		if (!DataLists.getWallImages().isEmpty())
 			DataLists.getWallImages().clear();
 		try {
-			Window.getReader().grabHeaderData(FileReader.getConfig().getLocation());
+			DataLists.setLevelHeader(DataLists.getLevelHeaders().get(DataLists.getLevelHeaderList().get(Window.getReader().getConfig().getCurrentLevel())));
 			loadData();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	private void setHighlightedThing(MapObjectStructure m, int i) {
 		RenderControls.setHighlightedX(m.getX());
 		RenderControls.setHighlightedY(m.getY());
@@ -308,150 +227,185 @@ public class EditorControls {
 	public void pollItemHighlight(int mouseX, int mouseY) {
 		if (!itemSelected && selectedIndex == -1) {
 			if (RenderControls.isThingsMode()) {
-				MapObjectStructure m = null;
-				for (int i = 0; i < DataLists.getObjects().size(); i++) {
-					m = DataLists.getObjects().get(i);
-
-					if ((m.getX() + 32 > mouseX && m.getX() - 32 < mouseX)
-							&& (m.getY() - 32 < mouseY && m.getY() + 32 > mouseY)) {
-						currentStoredXPos = 0;
-						currentStoredYPos = 0;
-						RenderControls.setItemHighlighted(true);
-						
-						setHighlightedThing(m, i);
-						
-						highlightedMOS = m;
-						highlightedIndex = i;
-						itemHighlighted = true;
-						return;
-					}
-				}
-
-				RenderControls.setItemHighlighted(false);
-				RenderControls.setHighlightedX(0);
-				RenderControls.setHighlightedY(0);
-				RenderControls.setHighlightedWidth(0);
-				RenderControls.setHighlightedHeight(0);
-				highlightedIndex = -1;
-				highlightedMOS = null;
-				itemHighlighted = false;
-				highlightedInfo = "";
+				highlightThing(mouseX, mouseY);
+			} else if (RenderControls.isLinesMode()) {
+				highlightWall(mouseX, mouseY);
+			} else if (RenderControls.isVertsMode()) {
+				highlightVertex(mouseX, mouseY);
 			}
 
-			if (RenderControls.isLinesMode()) {
-				WallStructure w = null;
-				double length = 0;
-				double angle = 0;
-				for (int i = 0; i < DataLists.getWalls().size(); i++) {
-					w = DataLists.getWalls().get(i);
-					if (((w.getX1() + 16 > mouseX && w.getX2() - 16 < mouseX) && (w.getY1() - 16 < mouseY)
-							&& (w.getY2() + 16 > mouseY))
-							|| ((w.getY1() + 16 > mouseY && w.getY2() - 16 < mouseY) && (w.getX1() - 16 < mouseX)
-									&& (w.getX2() + 16 > mouseX))
-							|| (w.getX1() + 16 < mouseX && w.getY1() + 16 < mouseY && w.getX2() - 16 > mouseX
-									&& w.getY2() - 16 > mouseY)
-							|| ((w.getX2() + 16 > mouseX && w.getX1() - 16 < mouseX) && (w.getY2() - 16 < mouseY)
-									&& (w.getY1() + 16 > mouseY))
-							|| ((w.getY2() + 16 > mouseY && w.getY1() - 16 < mouseY) && (w.getX2() - 16 < mouseX)
-									&& (w.getX1() + 16 > mouseX))
-							|| (w.getX2() + 16 < mouseX && w.getY2() + 16 < mouseY && w.getX1() - 16 > mouseX
-									&& w.getY1() - 16 > mouseY)) {
-						highlightedIndex = i;
-						highlightedWS = w;
-						itemHighlighted = true;
-						currentStoredXPos = 0;
-						currentStoredYPos = 0;
-
-						RenderControls.setItemHighlighted(true);
-						RenderControls.setHighlightedX(w.getX1());
-						RenderControls.setHighlightedY(w.getY1());
-						RenderControls.setHighlightedWidth(w.getX2());
-						RenderControls.setHighlightedHeight(w.getY2());
-						length = getLineLength();
-						angle = getLineAngle();
-						highlightedInfo = ("<html>Line Number: " + i + "<br/>Line Start X: " + w.getX1()
-								+ "<br/>Start Y: " + w.getY1() + "<br/>End X: " + w.getX2() + "<br/>End Y: " + w.getY2()
-								+ "<br/>Length: " + length + "<br/>Angle: " + angle + "<br/>Texture ID: 0x00"
-								+ Integer.toHexString(w.getTextureID()) + "<br/>Texture Length: 0x"
-								+ Integer.toHexString(w.getTextureScale()) + "<br/>Line Type: "
-								+ (w.getDoorType() == 0 ? "Wall" : "Door") + "</html>");
-
-						host.getLauncher().getSelectPanel().setItemInfo(highlightedInfo);
-						int imageOffset = w.getTextureID();
-
-						host.getLauncher().getSelectPanel().setImage(imageOffset);
-
-						host.getLauncher().getSelectPanel().getItemBox()
-								.setSelectedItem(Integer.toHexString(w.getTextureID()));
-
-						host.getLauncher().getSelectPanel().setBoxValues(w.getDoorType(), w.getDoorNumber(),
-								w.getDoorNSLow(), w.getDoorNSHigh(), w.getDoorWELow(), w.getDoorWEHigh(),
-								w.getTextureScale(), w.getTextureID());
-
-						return;
-					}
-				}
-
-				RenderControls.setItemHighlighted(false);
-				RenderControls.setHighlightedX(0);
-				RenderControls.setHighlightedY(0);
-				RenderControls.setHighlightedWidth(0);
-				RenderControls.setHighlightedHeight(0);
-				host.getLauncher().setTextAreaContents("Nothing highlighted.");
-				highlightedIndex = -1;
-				highlightedWS = null;
-				itemHighlighted = false;
-				highlightedInfo = "";
-			}
-
-			if (RenderControls.isVertsMode()) {
-				Vertex v = null;
-				for (int i = 0; i < DataLists.getVertices().size(); i++) {
-					v = DataLists.getVertices().get(i);
-
-					if ((v.getX() + 16 > mouseX && v.getX() - 16 < mouseX)
-							&& (v.getY() - 16 < mouseY && v.getY() + 16 > mouseY)) {
-						currentStoredXPos = 0;
-						currentStoredYPos = 0;
-
-						RenderControls.setItemHighlighted(true);
-						RenderControls.setHighlightedX(v.getX());
-						RenderControls.setHighlightedY(v.getY());
-						RenderControls.setHighlightedWidth(16);
-						RenderControls.setHighlightedHeight(16);
-						itemHighlighted = true;
-						highlightedVert = v;
-						highlightedIndex = i;
-						highlightedInfo = ("<html>Vertex x: " + v.getX() + "<br/>Vertex y: " + v.getY() + "</html>");
-						host.getLauncher().getSelectPanel().setItemInfo(highlightedInfo);
-						return;
-					}
-				}
-				RenderControls.setItemHighlighted(false);
-				RenderControls.setHighlightedX(0);
-				RenderControls.setHighlightedY(0);
-				RenderControls.setHighlightedWidth(0);
-				RenderControls.setHighlightedHeight(0);
-				itemHighlighted = false;
-				highlightedIndex = -1;
-				highlightedVert = null;
-				highlightedInfo = "";
-			}
-
-			if (itemSelected && !itemHighlighted) {
-				if (RenderControls.isLinesMode())
-					host.getLauncher().getSelectPanel()
-							.setCurrentImage(DataLists.getWallImages().get(selectedWS.getTextureID()));
-				if (RenderControls.isThingsMode())
-					host.getLauncher().getSelectPanel()
-							.setCurrentImage(DataLists.getObjectImage(selectedMOS.getThingID()));
-				host.getLauncher().getSelectPanel().setItemInfo(selInfor);
-			} else {
-				host.getLauncher().getSelectPanel()
-						.setCurrentImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
-				host.getLauncher().getSelectPanel().setItemInfo("");
+			if (!itemHighlighted) {
+				clearHighlightState();
 			}
 		}
+	}
+
+	private void highlightThing(int mouseX, int mouseY) {
+		MapObjectStructure m = null;
+		for (int i = 0; i < DataLists.getObjects().size(); i++) {
+			m = DataLists.getObjects().get(i);
+
+			if ((m.getX() + ITEM_HALF_SIZE > mouseX && m.getX() - ITEM_HALF_SIZE < mouseX)
+					&& (m.getY() - ITEM_HALF_SIZE < mouseY && m.getY() + ITEM_HALF_SIZE > mouseY)) {
+				currentStoredXPos = 0;
+				currentStoredYPos = 0;
+				RenderControls.setItemHighlighted(true);
+
+				setHighlightedThing(m, i);
+
+				highlightedMOS = m;
+				highlightedIndex = i;
+				itemHighlighted = true;
+				return;
+			}
+		}
+
+		RenderControls.setItemHighlighted(false);
+		RenderControls.setHighlightedX(0);
+		RenderControls.setHighlightedY(0);
+		RenderControls.setHighlightedWidth(0);
+		RenderControls.setHighlightedHeight(0);
+		highlightedIndex = -1;
+		highlightedMOS = null;
+		itemHighlighted = false;
+		highlightedInfo = "";
+	}
+
+	private void highlightWall(int mouseX, int mouseY) {
+		WallStructure w = null;
+		double length = 0;
+		double angle = 0;
+
+		for (int i = 0; i < DataLists.getWalls().size(); i++) {
+			w = DataLists.getWalls().get(i);
+
+			if (isPointNearWall(w, mouseX, mouseY)) {
+				highlightedIndex = i;
+				highlightedWS = w;
+				itemHighlighted = true;
+				currentStoredXPos = 0;
+				currentStoredYPos = 0;
+
+				RenderControls.setItemHighlighted(true);
+				RenderControls.setHighlightedX(w.getX1());
+				RenderControls.setHighlightedY(w.getY1());
+				RenderControls.setHighlightedWidth(w.getX2());
+				RenderControls.setHighlightedHeight(w.getY2());
+				length = getLineLength();
+				angle = getLineAngle();
+
+				highlightedInfo = buildWallHighlightInfo(w, length, angle);
+
+				host.getLauncher().getSelectPanel().setItemInfo(highlightedInfo);
+				int imageOffset = w.getTextureID();
+
+				host.getLauncher().getSelectPanel().setImage(imageOffset);
+
+				host.getLauncher().getSelectPanel().getItemBox()
+						.setSelectedItem(Integer.toHexString(w.getTextureID()));
+
+				host.getLauncher().getSelectPanel().setBoxValues(
+						w.getDoorType(), w.getDoorNumber(),
+						w.getDoorNSLow(), w.getDoorNSHigh(),
+						w.getDoorWELow(), w.getDoorWEHigh(),
+						w.getTextureScale(), w.getTextureID());
+
+				return;
+			}
+		}
+
+		RenderControls.setItemHighlighted(false);
+		RenderControls.setHighlightedX(0);
+		RenderControls.setHighlightedY(0);
+		RenderControls.setHighlightedWidth(0);
+		RenderControls.setHighlightedHeight(0);
+		host.getLauncher().setTextAreaContents("Nothing highlighted.");
+		highlightedIndex = -1;
+		highlightedWS = null;
+		itemHighlighted = false;
+		highlightedInfo = "";
+	}
+
+	private void highlightVertex(int mouseX, int mouseY) {
+		Vertex v = null;
+		for (int i = 0; i < DataLists.getVertices().size(); i++) {
+			v = DataLists.getVertices().get(i);
+
+			if ((v.getX() + WALL_HALF_SIZE > mouseX && v.getX() - WALL_HALF_SIZE < mouseX)
+					&& (v.getY() - WALL_HALF_SIZE < mouseY && v.getY() + WALL_HALF_SIZE > mouseY)) {
+				currentStoredXPos = 0;
+				currentStoredYPos = 0;
+
+				RenderControls.setItemHighlighted(true);
+				RenderControls.setHighlightedX(v.getX());
+				RenderControls.setHighlightedY(v.getY());
+				RenderControls.setHighlightedWidth(HIGHLIGHT_WIDTH);
+				RenderControls.setHighlightedHeight(HIGHLIGHT_HEIGHT);
+				itemHighlighted = true;
+				highlightedVert = v;
+				highlightedIndex = i;
+				highlightedInfo = buildVertexHighlightInfo(v);
+
+				host.getLauncher().getSelectPanel().setItemInfo(highlightedInfo);
+				return;
+			}
+		}
+
+		RenderControls.setItemHighlighted(false);
+		RenderControls.setHighlightedX(0);
+		RenderControls.setHighlightedY(0);
+		RenderControls.setHighlightedWidth(0);
+		RenderControls.setHighlightedHeight(0);
+		itemHighlighted = false;
+		highlightedIndex = -1;
+		highlightedVert = null;
+		highlightedInfo = "";
+	}
+
+	private boolean isPointNearWall(WallStructure wall, int mouseX, int mouseY) {
+		return ((wall.getX1() + WALL_HALF_SIZE > mouseX && wall.getX2() - WALL_HALF_SIZE < mouseX)
+				&& (wall.getY1() - WALL_HALF_SIZE < mouseY)
+				&& (wall.getY2() + WALL_HALF_SIZE > mouseY))
+			|| ((wall.getY1() + WALL_HALF_SIZE > mouseY && wall.getY2() - WALL_HALF_SIZE < mouseY)
+					&& (wall.getX1() - WALL_HALF_SIZE < mouseX)
+					&& (wall.getX2() + WALL_HALF_SIZE > mouseX))
+			|| (wall.getX1() + WALL_HALF_SIZE < mouseX && wall.getY1() + WALL_HALF_SIZE < mouseY
+					&& wall.getX2() - WALL_HALF_SIZE > mouseX
+					&& wall.getY2() - WALL_HALF_SIZE > mouseY)
+			|| ((wall.getX2() + WALL_HALF_SIZE > mouseX && wall.getX1() - WALL_HALF_SIZE < mouseX)
+					&& (wall.getY2() - WALL_HALF_SIZE < mouseY)
+					&& (wall.getY1() + WALL_HALF_SIZE > mouseY))
+			|| ((wall.getY2() + WALL_HALF_SIZE > mouseY && wall.getY1() - WALL_HALF_SIZE < mouseY)
+					&& (wall.getX2() - WALL_HALF_SIZE < mouseX)
+					&& (wall.getX1() + WALL_HALF_SIZE > mouseX))
+			|| (wall.getX2() + WALL_HALF_SIZE < mouseX && wall.getY2() + WALL_HALF_SIZE < mouseY
+					&& wall.getX1() - WALL_HALF_SIZE > mouseX
+					&& wall.getY1() - WALL_HALF_SIZE > mouseY);
+	}
+
+	private String buildWallHighlightInfo(WallStructure w, double length, double angle) {
+		return ("<html>Line Number: " + highlightedIndex + "<br/>"
+				+ "Line Start X: " + w.getX1() + "<br/>Start Y: " + w.getY1()
+				+ "<br/>End X: " + w.getX2() + "<br/>End Y: " + w.getY2()
+				+ "<br/>Length: " + length + "<br/>Angle: " + angle
+				+ "<br/>Texture ID: 0x00" + Integer.toHexString(w.getTextureID())
+				+ "<br/>Texture Length: 0x" + Integer.toHexString(w.getTextureScale())
+				+ "<br/>Line Type: " + (w.getDoorType() == 0 ? "Wall" : "Door") + "</html>");
+	}
+
+	private String buildVertexHighlightInfo(Vertex v) {
+		return ("<html>Vertex x: " + v.getX() + "<br/>Vertex y: " + v.getY() + "</html>");
+	}
+
+	private void clearHighlightState() {
+		RenderControls.setItemHighlighted(false);
+		RenderControls.setHighlightedX(0);
+		RenderControls.setHighlightedY(0);
+		RenderControls.setHighlightedWidth(0);
+		RenderControls.setHighlightedHeight(0);
+		highlightedIndex = -1;
+		itemHighlighted = false;
+		highlightedInfo = "";
 	}
 
 	public void setSelectedItem() {
@@ -536,21 +490,20 @@ public class EditorControls {
 
 	public void loadData() throws IOException {
 		setMapConfig(host.getLauncher());
-		FileReader.getConfig().saveMapConfigs();
-		if (DataLists.getObjects().size() > 0)
-			DataLists.getObjects().clear();
-		DataLists.setObjects(Window.getReader().readMapObjects(FileReader.getConfig().getLocation()));
-		if (DataLists.getWalls().size() > 0)
-			DataLists.getWalls().clear();
-		DataLists.setWalls(Window.getReader().readWalls(FileReader.getConfig().getLocation()));
+		Window.getReader().getConfig().saveMapConfigs();
+		DataLists.setObjects(Window.getReader().readMapObjects(Window.getReader().getConfig().getLocation()));
+		DataLists.setTextureInfoCache(Window.getReader().getTextureOffsets(DataLists.getLevelHeaderBase(), DataLists.getNumLevels()));
+		DataLists.setWalls(Window.getReader().readWalls(Window.getReader().getConfig().getLocation()));
+		DataLists.setLevelPal(DataLists.getLevelPalettes().get(DataLists.getCurrentLevelInfo().getPalOffs()));
 		DataLists.setupColors();
-		Window.getReader().readWallGFX(false, FileReader.getConfig().getLocation());
+		Window.getReader().readWallGFX(false, Window.getReader().getConfig().getLocation());
+
 		if (RenderControls.isLinesMode())
 			setTextureList();
 		if (RenderControls.isThingsMode())
 			setThingList();
 		host.getLauncher().setSnapOn("Off");
-		host.getLauncher().getChb1().setSelected(RenderControls.isRot90());
+		host.getLauncher().getRotateChb().setSelected(RenderControls.isRot90());
 		host.getLauncher().setLevelSelection(!DataLists.isCdOrCart());
 
 		prepLinesAndVerts();

@@ -5,7 +5,7 @@ import javax.swing.JTextArea;
 
 public class PalOutWindow extends JPanel {
 
-	private JTextArea jt;
+	private final JTextArea jt;
 
 	public PalOutWindow(String out) {
 		jt = new JTextArea();

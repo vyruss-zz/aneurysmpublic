@@ -5,7 +5,7 @@ import javax.swing.JComboBox;
 
 public class IconStringComboBox extends JComboBox {
 	private static final long serialVersionUID = 1L;
-	private DefaultComboBoxModel model;
+	private final DefaultComboBoxModel model;
 	public IconStringComboBox() {
 		model = new DefaultComboBoxModel();
 		setModel(model);

@@ -26,14 +26,14 @@ public class PaletteEditor extends JPanel {
 	private int address = 0;
 	private static final long serialVersionUID = -8635012649987300945L;
 	private int colorIndex = 0;
-	private JLabel[] colors = new JLabel[64];
-	private JLabel[] selectorRed = new JLabel[8];
-	private JLabel[] selectorGreen = new JLabel[8];
-	private JLabel[] selectorBlue = new JLabel[8];
+	private final JLabel[] colors = new JLabel[64];
+	private final JLabel[] selectorRed = new JLabel[8];
+	private final JLabel[] selectorGreen = new JLabel[8];
+	private final JLabel[] selectorBlue = new JLabel[8];
 	private byte selectedBlue, selectedGR;
-	private byte[] cols = new byte[128];
-	private Color[] pal = new Color[64];
-	private String fileLocation = FileReader.getConfig().getLocation();
+	private final byte[] cols = new byte[128];
+	private final Color[] pal = new Color[64];
+	private final String fileLocation = Window.getReader().getConfig().getLocation();
 
 	public PaletteEditor(int address) {
 		this.setLayout(null);
@@ -66,7 +66,7 @@ public class PaletteEditor extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				DataLists.setupColors();
-				Window.getReader().readWallGFX(true, FileReader.getConfig().getLocation());
+				Window.getReader().readWallGFX(true, Window.getReader().getConfig().getLocation());
 				refresh.setEnabled(false);
 			}
 		});
