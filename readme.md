@@ -1,6 +1,7 @@
 
 # Aneurysm
 Current version: 0.1.0
+Requires JRE 21.
 
 Aneurysm is a (limited) level editor for the 1994 Megadrive and Mega CD FPS game, "Bloodshot" written in Java.  At present, it features:
 
@@ -24,7 +25,7 @@ Aneurysm is a (limited) level editor for the 1994 Megadrive and Mega CD FPS game
  - And other tweaks and fixes.
 
 ## Data Extraction note
- - The way this works is that it retrieves all of the major data such that structures are file relative. For instance, sprites are stored in ROM starting at 0x11B9D6 with definition for things and sprite headers interleaved throughout. This starts at 0 and modifies accordingly.  This is to support using the data from an external program more easily.
+ - The way this works is that it retrieves all of the major data such that structures are file relative. For instance, sprites are stored in ROM starting at 0x11B9D6 with definition for things and sprite headers interleaved throughout. This starts at 0 and modifies accordingly.  This is to support using the data from an external program more easily.  The outputs will be placed into whatever folder the user chooses under bsdata/.
 ### Default Controls and Operations
   - Left Mouse Button / Space: Select highlighted item
      * For simplicity, only one item can be selected at a time and will prevent highlighting of other items until the selected item is deselected.
